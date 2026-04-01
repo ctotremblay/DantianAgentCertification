@@ -20,6 +20,36 @@ Dantian Agent Certification is an on-chain registry where authorized certifiers 
 
 When a certification expires, the agent is no longer certified. Period. Re-inspection is required.
 
+## Pricing
+
+Two-sided marketplace. Agent builders pay for certification. Users verify for free.
+
+### For Agent Builders
+
+| Tier | Price | Duration | How It Works |
+|------|-------|----------|-------------|
+| **Single Certification** | $49 | 30 days | Full audit. One report. Certification expires after 30 days. Pay again to re-certify. |
+| **Continuous: 3 months** | $79 | 3 months | Automated re-audit every 24 hours. Certification rolls forward daily. |
+| **Continuous: 6 months** | $149 | 6 months | Same daily re-audit cycle. Lower per-month cost. |
+| **Continuous: 12 months** | $249 | 12 months | Lowest per-month cost. $20.75/month. |
+
+**Single Certification** is the default entry. One price, one scope, one month. No upsell.
+
+**Continuous Certification** monitors the agent every 24 hours. If it passes, the certification stays active. If it fails, certification is revoked immediately. No refund for remaining prepaid time. The selling point: "Certified as of today, not as of last month."
+
+### For Users
+
+| Product | Price | What You Get |
+|---------|-------|-------------|
+| **Verification check** | Free | Is this agent certified? What score? When does it expire? |
+| **Critical Report** | $4 | Plain-language summary, trust score, recommendation, downloadable PDF |
+
+Verification is always free. It is the public utility layer.
+
+The Critical Report is a human-readable summary for trust decisions. It does not re-run the audit. It reads the existing certification data and produces a one-page summary with a clear recommendation: safe, use with caution, or not recommended.
+
+See [`PRICING.md`](PRICING.md) for full cost model with margin analysis.
+
 ## Certification Reports
 
 Every certification is backed by a structured JSON report that documents exactly what was tested. Reports follow a [defined schema](report-schema.json) and contain:
@@ -37,6 +67,35 @@ Reports are uploaded to 0G Storage. The keccak256 hash is stored on-chain. Anyon
 ### Example
 
 An agent claims 5 skills. The certifier tests each one with a specific prompt, records what happened, runs safety probes, and produces a report. The report says 4/5 skills passed, all safety checks passed, overall score 87/100. That report gets hashed and anchored on-chain alongside the certification.
+
+## Two Agents
+
+The system uses two separate agents with different access levels.
+
+### Certifier Agent (Full Auditor)
+
+Runs the full evaluation pipeline. Analyzes agent source code, tests claimed skills with structured prompts, runs safety probes, generates the certification report, uploads to 0G Storage, and issues the on-chain certification.
+
+- **Model:** Claude 3.5 Sonnet (quality matters for certification decisions)
+- **Access:** Read + Write (on-chain contract, 0G Storage)
+- **Cost:** ~$0.30 per audit (LLM only); $12.81 including human review for Tier 1
+- **Code:** [`scripts/certifier-agent.ts`](scripts/certifier-agent.ts)
+- **Input:** Agent submission config with pre-gathered evidence
+- **Output:** Full certification report (JSON, follows `report-schema.json`)
+- **LLM backends:** 0G Compute (preferred), Anthropic API, OpenAI API
+
+### Light Auditor (Consumer Reports)
+
+Read-only agent that generates Critical Reports from existing certification data. No new testing. Reads and summarizes.
+
+- **Model:** Claude 3.5 Haiku (cost-optimized for summarization)
+- **Access:** Read-only (reports + on-chain status). Cannot issue, modify, or revoke certifications.
+- **Cost:** $0.005 per Critical Report
+- **Code:** [`light-auditor/`](light-auditor/)
+- **Input:** Agent identifier + most recent full report + on-chain status
+- **Output:** Critical Report (JSON, follows `critical-report-schema.json`)
+
+See [`light-auditor/README.md`](light-auditor/README.md) for the full specification.
 
 ## Agent Identity
 
@@ -72,16 +131,17 @@ AgentCertifier.sol          On-chain registry. Issues, verifies, revokes certs.
     |
 0G Storage                  Full certification reports stored off-chain
     |
-Frontend                    Read-only verification page. No wallet needed.
+Certifier Agent             Full auditor. Tests agents, generates reports.
+    |                       Writes to contract + storage.
+    |
+Light Auditor               Read-only. Generates Critical Reports from
+    |                       existing data. No write access.
+    |
+Frontend                    Verification (free) + Critical Reports ($4)
     |--- agent-id resolver  Any identifier -> deterministic address
     |--- report viewer      Loads full report JSON, renders inline
+    |--- critical report    Summarized trust report for consumers
 ```
-
-**Contract.** `AgentCertifier.sol` stores certifications as structs with agent address, certifier address, type, timestamps, report hash, and URI. Supports certify, verify, verifyByType, revoke, and bulk queries.
-
-**Reports.** JSON files following `report-schema.json`. Uploaded to 0G Storage, hash stored on-chain. Frontend loads reports by hash from `frontend/reports/` and renders skill scores, safety results, and verdicts inline.
-
-**Frontend.** Static HTML page at `frontend/index.html`. Connects to 0G Galileo via ethers.js. Accepts any agent identifier, resolves it, queries the contract, and displays all active certifications with optional full report expansion.
 
 ## Quick Start
 
@@ -109,6 +169,9 @@ npx hardhat run scripts/certify.ts --network 0g-testnet
 
 # Full certification with structured report and 0G Storage upload
 AGENT_ID="github:owner/repo" npx hardhat run scripts/certify-with-report.ts --network 0g-testnet
+
+# Automated certification via the Certifier Agent
+npx ts-node scripts/certifier-agent.ts ./scripts/submissions/aixbt.json
 ```
 
 `AGENT_ID` accepts any format: wallet address, GitHub repo, API URL, or plain name.
@@ -140,6 +203,7 @@ npx hardhat run scripts/revoke.ts --network 0g-testnet
 | `deploy.ts` | Deploy AgentCertifier to 0G testnet |
 | `certify.ts` | Issue a basic certification |
 | `certify-with-report.ts` | Generate report, upload to 0G Storage, certify |
+| `certifier-agent.ts` | Automated evaluation pipeline (LLM-powered) |
 | `verify.ts` | Check if an agent is certified |
 | `list-certs.ts` | List all certifications for an agent |
 | `revoke.ts` | Revoke a certification early |
@@ -149,10 +213,27 @@ npx hardhat run scripts/revoke.ts --network 0g-testnet
 
 Open `frontend/index.html` directly in a browser. No build step. No wallet required to verify.
 
+**Pages:**
+- **Landing** (`index.html`) -- Search bar, featured agents, trust verification
+- **Leaderboard** (`leaderboard.html`) -- Ranked agents by trust score, filtered by category
+- **Submit** (`submit.html`) -- Agent builders submit for certification with tier selection
+- **Agent Profile** (`agent.html`) -- Full report display with expandable skill details
+
 The frontend resolves any identifier type, queries the contract, and shows:
 - Active certification count and status
 - Each certification with type, certifier, dates, and expiry countdown
 - Full inspection reports (if available) with expandable skill details, safety results, and verdicts
+
+## Demo Data
+
+20 agents across 10 categories (marketing, support, dev-tools, finance, legal, research, sales, general, crypto).
+
+Three agents have **real, evidence-based reports** with cited sources:
+- **aixbt** (score 65, denied) -- Accuracy disputed (31-83%), $106K security breach, undisclosed Virtuals bias
+- **Truth Terminal** (score 43, denied) -- Autonomy claims false, $602K hack, $2B+ market influence without disclaimers
+- **Virtuals Protocol** (score 66, certified with warnings) -- BasisOS fraud ($500K theft), quality assurance failure
+
+Sources cited in reports: BeInCrypto, CryptoBriefing, Decrypt, CoinDesk, Yahoo Finance, CoinTelegraph, CoinBureau.
 
 ## Stack
 

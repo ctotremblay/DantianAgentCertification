@@ -1,0 +1,47 @@
+{
+  "version": "1.0.0",
+  "agent": {
+    "name": "AIverse",
+    "identifier": "api:https://aiverse.io",
+    "source": "https://aiverse.io",
+    "operator": "AIverse / 0G Labs",
+    "description": "Web 4.0 marketplace where AI agents are minted as iNFTs (ERC-7857) with portable identity, intelligence, and memory on 0G.",
+    "claimedCapabilities": [
+      "iNFT minting and management",
+      "Agent identity persistence",
+      "Cross-platform agent deployment",
+      "On-chain agent memory",
+      "Agent-to-agent communication"
+    ]
+  },
+  "auditSummary": {
+    "skillsPassed": 4,
+    "skillsPartial": 1,
+    "skillsFailed": 0,
+    "skillsTotal": 5,
+    "safetyStatus": "pass",
+    "keyFindings": [
+      "Successful mint with correct ERC-7857 metadata.",
+      "Full conversation recall after 24 hours.",
+      "Cross-platform deployment works.",
+      "Memory is genuinely decentralized on 0G Storage.",
+      "Agents successfully collaborated to produce a useful joint assessment."
+    ]
+  },
+  "trustScore": 88,
+  "trustExplanation": "Strong performance across 4 of 5 skills with pass safety.",
+  "certification": {
+    "status": "active",
+    "certType": "CAPABILITY",
+    "lastAuditDate": "2026-03-30T08:00:00Z",
+    "expiresAt": "2026-04-29T08:00:00Z",
+    "certifier": "Dantian"
+  },
+  "recommendation": {
+    "level": "safe",
+    "summary": "Safe to use for web 4.0 marketplace where ai agents are minted as infts (erc-7857) with portable identity, intelligence, and memory on 0g..",
+    "concerns": []
+  },
+  "generatedAt": "2026-04-01T13:53:34.300Z",
+  "disclaimer": "This Critical Report is a summary of the most recent Dantian certification audit. It is not a new evaluation. Agent capabilities may have changed since the last audit."
+}

@@ -1,0 +1,47 @@
+{
+  "version": "1.0.0",
+  "agent": {
+    "name": "Dantian Research Assistant",
+    "identifier": "github:dantian-ai/research-assistant",
+    "source": "github:dantian-ai/research-assistant",
+    "operator": "Dantian",
+    "description": "AI agent that answers research questions, summarizes documents, and generates structured analysis.",
+    "claimedCapabilities": [
+      "Question answering",
+      "Document summarization",
+      "Structured data extraction",
+      "Multi-language support",
+      "Code generation"
+    ]
+  },
+  "auditSummary": {
+    "skillsPassed": 4,
+    "skillsPartial": 1,
+    "skillsFailed": 0,
+    "skillsTotal": 5,
+    "safetyStatus": "pass",
+    "keyFindings": [
+      "Agent provided accurate, structured answer covering all three mechanisms with correct tradeoff analysis.",
+      "Summary accurately captured both layers and the PoRA mechanism in exactly 2 sentences.",
+      "Valid JSON output.",
+      "French translation is accurate but missing accent on 'verifiable'.",
+      "Function is correct."
+    ]
+  },
+  "trustScore": 87,
+  "trustExplanation": "Strong performance across 4 of 5 skills with pass safety.",
+  "certification": {
+    "status": "active",
+    "certType": "CAPABILITY",
+    "lastAuditDate": "2026-04-01T11:26:08.042Z",
+    "expiresAt": "2026-05-01T11:26:08.042Z",
+    "certifier": "Dantian"
+  },
+  "recommendation": {
+    "level": "safe",
+    "summary": "Safe to use for ai agent that answers research questions, summarizes documents, and generates structured analysis..",
+    "concerns": []
+  },
+  "generatedAt": "2026-04-01T13:53:34.283Z",
+  "disclaimer": "This Critical Report is a summary of the most recent Dantian certification audit. It is not a new evaluation. Agent capabilities may have changed since the last audit."
+}

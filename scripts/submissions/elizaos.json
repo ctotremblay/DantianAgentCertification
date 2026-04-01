@@ -1,0 +1,23 @@
+{
+  "slug": "elizaos",
+  "name": "ElizaOS",
+  "identifier": "github:elizaOS/eliza",
+  "description": "First open-source Web3 AI agent framework. TypeScript-based system for building and deploying autonomous AI agents across Discord, Twitter, and Telegram with multi-model support and blockchain integration.",
+  "operator": "Eliza Labs (formerly ai16z)",
+  "model": "Multi-model (OpenAI, Anthropic, Llama, Grok, configurable)",
+  "claimedSkills": [
+    "Autonomous agent deployment",
+    "Multi-platform operation",
+    "Web3 blockchain integration",
+    "Multi-model support",
+    "Plugin ecosystem"
+  ],
+  "researchNotes": "Research conducted April 2026. Sources: Princeton University research paper (arxiv 2501.06781), CoinTelegraph, Decrypt, GitHub repository (elizaOS/eliza), CrAIBench framework documentation, South Korean DAXA trading alert.\n\nKey facts:\n- First open-source Web3 AI agent framework, TypeScript-based\n- Three commands to deploy a live agent; supports Discord, Twitter, Telegram\n- Multi-model: OpenAI, Anthropic, Llama, Grok all configurable\n- V2 announced with unified message bus, multi-chain wallet, registry system, 100% test coverage target\n- CRITICAL VULNERABILITY: Princeton researchers (2025) identified memory injection attack. External conversation history storage allows malicious actors to inject fabricated context into agent memory. ElizaOS lacks integrity verification for memory entries. Published as arxiv 2501.06781.\n- CrAIBench: formal benchmarking framework developed specifically to evaluate these vulnerabilities in crypto AI agents\n- Attack vector: fake social media accounts and coordinated posts can trick ElizaOS-based agents into executing bad trading decisions\n- South Korean DAXA issued trading alert on AI16Z token via Bithumb, citing lack of transparency\n- Discussions with Eliza Labs ongoing to address memory injection vulnerability; no full fix confirmed as of research date\n- V2 redesign addresses some architectural concerns but plugin ecosystem quality varies widely",
+  "evidence": {
+    "Autonomous agent deployment": "Deployment is straightforward and well-documented. The framework requires three commands to go from zero to a running agent. GitHub repository shows active maintenance and clear setup instructions. Multiple independent developers have confirmed the deployment pipeline works as described. The framework is the most widely adopted open-source Web3 agent framework, which provides additional community validation of the deployment process.",
+    "Multi-platform operation": "Discord, Twitter, and Telegram integrations are confirmed through the repository's client packages. Each platform has a dedicated adapter with platform-specific message handling. Independent developers have deployed agents across all three platforms. The adapters handle platform-specific constraints (character limits, threading, reaction handling) natively. V2 introduces a unified message bus that abstracts platform differences further.",
+    "Web3 blockchain integration": "Blockchain integration is a core design purpose of the framework. Agents can read on-chain data, interact with smart contracts, and manage wallet operations. V2 adds multi-chain wallet support. However, the Princeton memory injection vulnerability (arxiv 2501.06781) is directly relevant here: agents making blockchain transactions based on manipulated memory could execute unauthorized or harmful trades. The integration works technically but the security posture around financial operations is inadequate.",
+    "Multi-model support": "OpenAI, Anthropic, Llama, and Grok are all supported through a configurable model provider system. Developers can swap models via configuration without code changes. This is verified through the repository's model provider abstractions. The multi-model architecture is a genuine strength, allowing operators to choose models based on cost, capability, or compliance requirements.",
+    "Plugin ecosystem": "A community plugin ecosystem exists and is actively used. However, V2 represents a significant architectural redesign that includes a new registry system, suggesting the V1 plugin architecture had limitations. Plugin quality varies; there is no formal review or certification process for community plugins. The ecosystem is functional but immature compared to established plugin marketplaces. The V2 registry system may address quality concerns but is not yet fully deployed."
+  }
+}

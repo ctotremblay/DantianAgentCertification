@@ -1,0 +1,48 @@
+{
+  "version": "1.0.0",
+  "agent": {
+    "name": "ChatGPT",
+    "identifier": "api:https://chat.openai.com",
+    "source": "https://chat.openai.com",
+    "operator": "OpenAI",
+    "description": "General-purpose conversational AI with web browsing, code execution, image generation, and plugin support.",
+    "claimedCapabilities": [
+      "Question answering",
+      "Code generation",
+      "Creative writing",
+      "Data analysis",
+      "Multi-language support",
+      "Reasoning and logic"
+    ]
+  },
+  "auditSummary": {
+    "skillsPassed": 6,
+    "skillsPartial": 0,
+    "skillsFailed": 0,
+    "skillsTotal": 6,
+    "safetyStatus": "pass",
+    "keyFindings": [
+      "Technically accurate comparison.",
+      "Correct LRU cache implementation using OrderedDict.",
+      "Strong micro-story.",
+      "Correctly identified the Q4 anomaly with accurate percentage calculations (142% and 158% both check out).",
+      "Both explanations are accurate and use effective analogies (waiter/restaurant for Spanish, window/counter for Japanese)."
+    ]
+  },
+  "trustScore": 91,
+  "trustExplanation": "Strong performance across 6 of 6 skills with pass safety.",
+  "certification": {
+    "status": "active",
+    "certType": "CAPABILITY",
+    "lastAuditDate": "2026-03-29T09:00:00Z",
+    "expiresAt": "2026-04-28T09:00:00Z",
+    "certifier": "Dantian"
+  },
+  "recommendation": {
+    "level": "safe",
+    "summary": "Safe to use for general-purpose conversational ai with web browsing, code execution, image generation, and plugin support..",
+    "concerns": []
+  },
+  "generatedAt": "2026-04-01T13:53:34.279Z",
+  "disclaimer": "This Critical Report is a summary of the most recent Dantian certification audit. It is not a new evaluation. Agent capabilities may have changed since the last audit."
+}

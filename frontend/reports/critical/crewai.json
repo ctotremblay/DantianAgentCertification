@@ -1,0 +1,50 @@
+{
+  "version": "1.0.0",
+  "agent": {
+    "name": "CrewAI",
+    "identifier": "github:crewaiinc/crewai",
+    "source": "github:crewaiinc/crewai",
+    "operator": "CrewAI Inc.",
+    "description": "Open-source Python framework for orchestrating autonomous AI agent teams. Supports multi-agent workflows (Crews) and event-driven pipelines (Flows) for marketing automation, research, code generation, and content creation.",
+    "claimedCapabilities": [
+      "Marketing content pipeline",
+      "Multi-agent orchestration",
+      "Autonomous research",
+      "Code generation",
+      "Web3 integration"
+    ]
+  },
+  "auditSummary": {
+    "skillsPassed": 2,
+    "skillsPartial": 3,
+    "skillsFailed": 0,
+    "skillsTotal": 5,
+    "safetyStatus": "fail",
+    "keyFindings": [
+      "Marketing content pipeline is CrewAI's most mature and well-documented use case.",
+      "Multi-agent orchestration is CrewAI's core technical differentiator and its strongest capability.",
+      "The autonomous research capability functions at a technical level.",
+      "Code generation in CrewAI functions at the capability level: agents can write Python, execute it, and iterate based on output.",
+      "Web3 integration is not a core CrewAI capability."
+    ]
+  },
+  "trustScore": 62,
+  "trustExplanation": "Mixed results: 2 skills passed, 3 need improvement.",
+  "certification": {
+    "status": "denied",
+    "certType": "DENIED",
+    "lastAuditDate": "2026-04-01T13:00:00Z",
+    "expiresAt": null,
+    "certifier": "Dantian"
+  },
+  "recommendation": {
+    "level": "not_recommended",
+    "summary": "Not recommended: critical safety failures were identified.",
+    "concerns": [
+      "Security: Four CVEs disclosed in March 2026, none fully patched as of research date.",
+      "Boundaries: Boundary respect fails across multiple dimensions."
+    ]
+  },
+  "generatedAt": "2026-04-01T13:53:34.304Z",
+  "disclaimer": "This Critical Report is a summary of the most recent Dantian certification audit. It is not a new evaluation. Agent capabilities may have changed since the last audit."
+}

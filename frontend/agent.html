@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dantian — Agent Profile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">DANTIAN</a>
+  <div class="nav-links">
+    <a href="index.html">Verify</a>
+    <a href="leaderboard.html">Leaderboard</a>
+    <a href="submit.html" class="nav-cta">Get Certified</a>
+  </div>
+</nav>
+
+<main>
+  <div id="profileContent">
+    <div class="loading mt-48">LOADING AGENT PROFILE</div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-brand">DANTIAN</div>
+  <div class="footer-links">
+    Agent trust verification
+  </div>
+</footer>
+
+<script type="module">
+  const params = new URLSearchParams(window.location.search);
+  const agentId = params.get('id');
+  const container = document.getElementById('profileContent');
+
+  if (!agentId) {
+    container.innerHTML = `
+      <div style="padding: 80px 0; text-align: center;">
+        <h2>Agent not found</h2>
+        <p class="subtitle mt-8">No agent identifier provided.</p>
+        <a href="index.html" class="btn btn-outline btn-sm mt-24" style="display: inline-block;">BACK TO SEARCH</a>
+      </div>`;
+  } else {
+    // Load agent data
+    let agent = null;
+    let report = null;
+
+    try {
+      const dataResp = await fetch('data/agents.json');
+      const data = await dataResp.json();
+      agent = data.agents.find(a => a.slug === agentId);
+    } catch (e) {
+      console.error('Failed to load agent data:', e);
+    }
+
+    if (!agent) {
+      container.innerHTML = `
+        <div style="padding: 80px 0; text-align: center;">
+          <h2>Agent not found</h2>
+          <p class="subtitle mt-8">No agent with identifier "${agentId}" was found.</p>
+          <a href="index.html" class="btn btn-outline btn-sm mt-24" style="display: inline-block;">BACK TO SEARCH</a>
+        </div>`;
+    } else {
+      // Load report and critical report in parallel
+      let criticalReport = null;
+      try {
+        const [reportResp, criticalResp] = await Promise.all([
+          fetch(`reports/${agent.reportFile}`),
+          fetch(`reports/critical/${agent.slug}.json`)
+        ]);
+        if (reportResp.ok) report = await reportResp.json();
+        if (criticalResp.ok) criticalReport = await criticalResp.json();
+      } catch (e) {
+        console.error('Failed to load reports:', e);
+      }
+
+      document.title = `Dantian — ${agent.name}`;
+      renderProfile(agent, report, criticalReport);
+    }
+  }
+
+  function renderProfile(agent, report, criticalReport) {
+    const scoreClass = agent.trustScore >= 85 ? 'score-green' : agent.trustScore >= 70 ? 'score-amber' : 'score-red';
+    const catLabels = { 'marketing': 'Marketing', 'support': 'Support', 'dev-tools': 'Dev Tools', 'finance': 'Finance', 'legal': 'Legal', 'research': 'Research', 'crypto': 'Crypto', 'general': 'General', 'sales': 'Sales' };
+
+    // Status
+    let statusClass, statusText;
+    if (!agent.certified) {
+      statusClass = 'not-certified';
+      statusText = 'CERTIFICATION DENIED';
+    } else if (agent.safetyStatus === 'warning') {
+      statusClass = 'warning';
+      statusText = 'VERIFIED WITH WARNINGS';
+    } else {
+      statusClass = 'certified';
+      statusText = 'VERIFIED';
+    }
+
+    // Expiry
+    let expiryHtml = '';
+    if (agent.expiresAt) {
+      const daysLeft = Math.ceil((new Date(agent.expiresAt) - Date.now()) / 86400000);
+      if (daysLeft <= 0) {
+        expiryHtml = `<div class="expiry-bar soon">EXPIRED. RE-CERTIFICATION REQUIRED.</div>`;
+      } else {
+        const soonClass = daysLeft <= 7 ? ' soon' : '';
+        expiryHtml = `<div class="expiry-bar${soonClass}">${daysLeft} days remaining${daysLeft <= 7 ? '. Renewal needed soon.' : ''}</div>`;
+      }
+    }
+
+    // Tested date
+    const testedDate = new Date(agent.lastTested);
+    const daysAgo = Math.floor((Date.now() - testedDate) / 86400000);
+    const testedText = daysAgo === 0 ? 'Today' : daysAgo === 1 ? 'Yesterday' : daysAgo + ' days ago';
+
+    let html = `
+      <div class="status-bar ${statusClass}">
+        <span class="dot"></span>
+        ${statusText}
+      </div>
+
+      <div class="profile-header">
+        <div class="profile-score-box">
+          <div class="score-large ${scoreClass}">${agent.trustScore}</div>
+          <div class="label mt-8">TRUST SCORE</div>
+        </div>
+        <div class="profile-info">
+          <h1>${agent.name}</h1>
+          <p class="subtitle">${agent.description}</p>
+          <div class="profile-meta">
+            <span class="badge badge-category">${catLabels[agent.category] || agent.category}</span>
+            <span class="profile-meta-item">TESTED ${testedText.toUpperCase()}</span>
+            <span class="profile-meta-item">${agent.skillsPassed}/${agent.skillsTotal} SKILLS PASSED</span>
+            ${agent.operator ? `<span class="profile-meta-item">BY ${agent.operator.toUpperCase()}</span>` : ''}
+          </div>
+        </div>
+      </div>
+
+      ${expiryHtml}
+    `;
+
+    // ── Skills section ──────────────────────────────────────────────
+    if (report && report.skills) {
+      html += `
+        <div class="profile-section mt-32">
+          <div class="profile-section-title">Skill Verification</div>
+          <div style="font-family: var(--mono); font-size: 11px; color: var(--slate); margin-bottom: 16px;">
+            ${report.verdict.skillsVerified}/${report.verdict.skillsClaimed} claimed skills verified
+          </div>
+      `;
+
+      report.skills.forEach((s, i) => {
+        const badgeClass = s.result === 'pass' ? 'badge-pass' : s.result === 'fail' ? 'badge-fail' : 'badge-partial';
+        const scoreText = s.score != null ? s.score : '';
+
+        html += `
+          <div>
+            <div class="skill-row" onclick="document.getElementById('skill-${i}').classList.toggle('open')">
+              <span class="skill-name">${s.skill}</span>
+              <span class="skill-score-cell">${scoreText}</span>
+              <span class="badge ${badgeClass}">${s.result.toUpperCase()}</span>
+            </div>
+            <div class="skill-detail" id="skill-${i}">
+              <div class="skill-evidence">${s.evidence}</div>
+        `;
+
+        if (s.test) {
+          html += `
+              <div class="test-block">
+                <div class="test-label">PROMPT</div>
+                <div class="test-content">${escapeHtml(s.test.prompt)}</div>
+              </div>
+              <div class="test-block" style="margin-top: 4px;">
+                <div class="test-label">AGENT RESPONSE${s.test.responseTime ? ' (' + s.test.responseTime + ')' : ''}</div>
+                <div class="test-content">${escapeHtml(s.test.actualResponse)}</div>
+              </div>
+          `;
+        }
+
+        html += `</div></div>`;
+      });
+
+      html += `</div>`;
+    }
+
+    // ── Safety section ──────────────────────────────────────────────
+    if (report && report.safety) {
+      html += `<div class="profile-section"><div class="profile-section-title">Safety Checks</div>`;
+
+      const checks = [
+        { key: 'jailbreakResistance', label: 'Jailbreak resistance' },
+        { key: 'piiHandling', label: 'PII handling' },
+        { key: 'boundaryRespect', label: 'Boundary respect' },
+      ];
+
+      checks.forEach(({ key, label }) => {
+        const check = report.safety[key];
+        if (!check) return;
+        const badgeClass = check.result === 'pass' ? 'badge-pass' : check.result === 'fail' ? 'badge-fail' : 'badge-partial';
+
+        html += `
+          <div class="safety-row">
+            <div>
+              <span class="safety-name">${label}</span>
+              ${check.evidence ? `<div style="font-size: 11px; color: var(--slate); margin-top: 4px; line-height: 1.5;">${check.evidence}</div>` : ''}
+            </div>
+            <span class="badge ${badgeClass}" style="flex-shrink: 0;">${check.result.toUpperCase()}</span>
+          </div>
+        `;
+      });
+
+      html += `</div>`;
+    }
+
+    // ── Verdict section ─────────────────────────────────────────────
+    if (report && report.verdict) {
+      html += `
+        <div class="profile-section">
+          <div class="profile-section-title">Verdict</div>
+          <div class="card">
+            <p style="font-size: 13px; color: var(--silver); line-height: 1.7;">
+              ${report.verdict.summary}
+            </p>
+          </div>
+        </div>
+      `;
+    }
+
+    // ── Critical Report section ────────────────────────────────────
+    if (criticalReport) {
+      const recColors = {
+        safe: { bg: 'rgba(0, 255, 136, 0.08)', border: 'rgba(0, 255, 136, 0.25)', text: '#00ff88', label: 'SAFE TO USE' },
+        caution: { bg: 'rgba(255, 170, 0, 0.08)', border: 'rgba(255, 170, 0, 0.25)', text: '#ffaa00', label: 'USE WITH CAUTION' },
+        not_recommended: { bg: 'rgba(255, 60, 60, 0.08)', border: 'rgba(255, 60, 60, 0.25)', text: '#ff3c3c', label: 'NOT RECOMMENDED' }
+      };
+      const rec = recColors[criticalReport.recommendation.level] || recColors.caution;
+
+      html += `
+        <div class="profile-section">
+          <div class="profile-section-title">Critical Report</div>
+          <div class="label" style="margin-bottom: 12px; font-size: 10px;">CONSUMER SUMMARY &middot; GENERATED BY LIGHT AUDITOR</div>
+
+          <div style="background: ${rec.bg}; border: 1px solid ${rec.border}; border-radius: 8px; padding: 16px 20px; margin-bottom: 16px;">
+            <div style="font-family: var(--mono); font-size: 12px; font-weight: 700; color: ${rec.text}; letter-spacing: 0.5px;">${rec.label}</div>
+            <div style="font-size: 13px; color: var(--silver); margin-top: 6px; line-height: 1.6;">${criticalReport.recommendation.summary}</div>
+          </div>
+      `;
+
+      if (criticalReport.auditSummary?.keyFindings?.length) {
+        html += `<div style="margin-bottom: 16px;"><div class="label" style="margin-bottom: 8px;">KEY FINDINGS</div>`;
+        criticalReport.auditSummary.keyFindings.forEach(f => {
+          html += `<div style="font-size: 12px; color: var(--silver); line-height: 1.6; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.04);">${f}</div>`;
+        });
+        html += `</div>`;
+      }
+
+      if (criticalReport.recommendation?.concerns?.length) {
+        html += `<div style="margin-bottom: 12px;"><div class="label" style="margin-bottom: 8px; color: ${rec.text};">CONCERNS</div>`;
+        criticalReport.recommendation.concerns.forEach(c => {
+          html += `<div style="font-size: 12px; color: var(--slate); line-height: 1.6; padding: 4px 0;">&bull; ${c}</div>`;
+        });
+        html += `</div>`;
+      }
+
+      html += `
+          <div style="display: flex; gap: 16px; font-family: var(--mono); font-size: 11px; color: var(--slate); margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.06);">
+            <span>SCORE: ${criticalReport.trustScore}</span>
+            <span>SAFETY: ${criticalReport.auditSummary.safetyStatus.toUpperCase()}</span>
+            <span>SKILLS: ${criticalReport.auditSummary.skillsPassed}/${criticalReport.auditSummary.skillsTotal} PASSED</span>
+          </div>
+        </div>
+      `;
+    }
+
+    // ── Inspection details ──────────────────────────────────────────
+    if (report && report.inspection) {
+      html += `
+        <div class="profile-section">
+          <div class="profile-section-title">Inspection Details</div>
+          <div class="info-row">
+            <span class="info-label">METHOD</span>
+            <span class="info-value" style="max-width: 70%; white-space: normal; text-align: right; font-size: 11px;">${report.inspection.method}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">DURATION</span>
+            <span class="info-value">${report.inspection.duration}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">ENVIRONMENT</span>
+            <span class="info-value" style="max-width: 70%; white-space: normal; text-align: right; font-size: 11px;">${report.inspection.environment}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">DATE</span>
+            <span class="info-value">${new Date(report.inspection.date).toLocaleDateString()} ${new Date(report.inspection.date).toLocaleTimeString()}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    // ── Bottom nav ──────────────────────────────────────────────────
+    html += `
+      <div style="padding: 40px 0 60px; display: flex; gap: 12px; justify-content: center;">
+        <a href="leaderboard.html" class="btn btn-outline btn-sm">VIEW LEADERBOARD</a>
+        <a href="index.html" class="btn btn-outline btn-sm">CHECK ANOTHER AGENT</a>
+      </div>
+    `;
+
+    container.innerHTML = html;
+  }
+
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+</script>
+
+</body>
+</html>

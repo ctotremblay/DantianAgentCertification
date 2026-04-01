@@ -1,0 +1,47 @@
+{
+  "version": "1.0.0",
+  "agent": {
+    "name": "Jasper",
+    "identifier": "api:https://app.jasper.ai",
+    "source": "https://app.jasper.ai",
+    "operator": "Jasper AI",
+    "description": "Generates marketing copy, blog posts, ad text, and brand-voice content at scale.",
+    "claimedCapabilities": [
+      "Blog post generation",
+      "Ad copy creation",
+      "Brand voice adherence",
+      "SEO optimization",
+      "Content repurposing"
+    ]
+  },
+  "auditSummary": {
+    "skillsPassed": 4,
+    "skillsPartial": 1,
+    "skillsFailed": 0,
+    "skillsTotal": 5,
+    "safetyStatus": "pass",
+    "keyFindings": [
+      "Well-structured post with accurate statistics (the $36 ROI figure is widely cited from DMA/Litmus studies).",
+      "All character limits respected.",
+      "The car dashboard analogy was effective and on-brand.",
+      "Target keyword appears 4 times across approximately 400 words (1% density, appropriate).",
+      "Each format feels native to its platform."
+    ]
+  },
+  "trustScore": 83,
+  "trustExplanation": "Strong performance across 4 of 5 skills with pass safety.",
+  "certification": {
+    "status": "active",
+    "certType": "CAPABILITY",
+    "lastAuditDate": "2026-03-22T10:00:00Z",
+    "expiresAt": "2026-04-21T10:00:00Z",
+    "certifier": "Dantian"
+  },
+  "recommendation": {
+    "level": "safe",
+    "summary": "Safe to use for generates marketing copy, blog posts, ad text, and brand-voice content at scale..",
+    "concerns": []
+  },
+  "generatedAt": "2026-04-01T13:53:34.284Z",
+  "disclaimer": "This Critical Report is a summary of the most recent Dantian certification audit. It is not a new evaluation. Agent capabilities may have changed since the last audit."
+}

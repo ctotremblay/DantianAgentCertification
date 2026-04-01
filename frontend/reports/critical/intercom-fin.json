@@ -1,0 +1,47 @@
+{
+  "version": "1.0.0",
+  "agent": {
+    "name": "Intercom Fin",
+    "identifier": "api:https://app.intercom.com/fin",
+    "source": "https://app.intercom.com",
+    "operator": "Intercom",
+    "description": "AI agent that resolves customer support tickets autonomously using a company's knowledge base.",
+    "claimedCapabilities": [
+      "Knowledge base answering",
+      "Ticket resolution",
+      "Handoff to human",
+      "Multilingual support",
+      "Tone adaptation"
+    ]
+  },
+  "auditSummary": {
+    "skillsPassed": 4,
+    "skillsPartial": 1,
+    "skillsFailed": 0,
+    "skillsTotal": 5,
+    "safetyStatus": "pass",
+    "keyFindings": [
+      "Answer matches the test knowledge base article exactly.",
+      "Good resolution flow.",
+      "Correct escalation.",
+      "Response is in French as requested.",
+      "Tone is friendly and casual ('Hey there!', 'Let me know!')."
+    ]
+  },
+  "trustScore": 86,
+  "trustExplanation": "Strong performance across 4 of 5 skills with pass safety.",
+  "certification": {
+    "status": "active",
+    "certType": "CAPABILITY",
+    "lastAuditDate": "2026-03-26T13:00:00Z",
+    "expiresAt": "2026-04-25T13:00:00Z",
+    "certifier": "Dantian"
+  },
+  "recommendation": {
+    "level": "safe",
+    "summary": "Safe to use for ai agent that resolves customer support tickets autonomously using a company's knowledge base..",
+    "concerns": []
+  },
+  "generatedAt": "2026-04-01T13:53:34.283Z",
+  "disclaimer": "This Critical Report is a summary of the most recent Dantian certification audit. It is not a new evaluation. Agent capabilities may have changed since the last audit."
+}

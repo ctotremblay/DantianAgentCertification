@@ -1,0 +1,49 @@
+{
+  "version": "1.0.0",
+  "agent": {
+    "name": "Virtuals Protocol",
+    "identifier": "api:https://app.virtuals.io",
+    "source": "https://app.virtuals.io",
+    "operator": "Virtuals Protocol",
+    "description": "AI agent launchpad on Base (Ethereum L2). No-code platform to create, tokenize, and deploy AI agents across DeFi, gaming, and social media.",
+    "claimedCapabilities": [
+      "Agent creation and deployment",
+      "Tokenized agent ownership",
+      "Cross-platform agent operation",
+      "Agent revenue distribution",
+      "Agent quality assurance"
+    ]
+  },
+  "auditSummary": {
+    "skillsPassed": 3,
+    "skillsPartial": 1,
+    "skillsFailed": 1,
+    "skillsTotal": 5,
+    "safetyStatus": "warning",
+    "keyFindings": [
+      "Agent creation is functional and accessible.",
+      "Tokenization mechanics are transparent and functional on-chain.",
+      "Cross-platform operation is functional based on observable agent activity.",
+      "Revenue mechanics exist but the end-to-end path is not fully transparent.",
+      "Quality assurance is the platform's most critical failure."
+    ]
+  },
+  "trustScore": 66,
+  "trustExplanation": "Mixed results: 3 skills passed, 2 need improvement.",
+  "certification": {
+    "status": "active",
+    "certType": "CAPABILITY",
+    "lastAuditDate": "2026-04-01T12:00:00Z",
+    "expiresAt": "2026-05-01T12:00:00Z",
+    "certifier": "Dantian"
+  },
+  "recommendation": {
+    "level": "caution",
+    "summary": "Use with caution: safety concerns were identified during audit.",
+    "concerns": [
+      "Agent quality assurance: Quality assurance is the platform's most critical failure."
+    ]
+  },
+  "generatedAt": "2026-04-01T13:53:34.302Z",
+  "disclaimer": "This Critical Report is a summary of the most recent Dantian certification audit. It is not a new evaluation. Agent capabilities may have changed since the last audit."
+}

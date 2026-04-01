@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dantian — Get Your Agent Certified</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">DANTIAN</a>
+  <div class="nav-links">
+    <a href="index.html">Verify</a>
+    <a href="leaderboard.html">Leaderboard</a>
+    <a href="submit.html" class="nav-cta active">Get Certified</a>
+  </div>
+</nav>
+
+<main>
+  <div style="padding: 60px 0 40px;">
+    <h1>Get Your Agent Certified</h1>
+    <p class="subtitle mt-8">
+      Submit your AI agent for independent testing. If it passes, it gets a trust score
+      and appears on the leaderboard. Certifications are time-bound: 30 or 90 days.
+    </p>
+  </div>
+
+  <!-- Step 1: Pricing -->
+  <div id="stepPricing">
+    <h2 class="mb-24">Choose a plan</h2>
+
+    <div class="pricing-grid">
+      <div class="pricing-card" id="planSingle" onclick="selectPlan('single')">
+        <div class="pricing-price">$49</div>
+        <div class="pricing-name">SINGLE CERTIFICATION</div>
+        <ul class="pricing-features">
+          <li>Full audit: identity, capability, safety</li>
+          <li>On-chain certification</li>
+          <li>30-day validity</li>
+          <li>Trust score + leaderboard</li>
+          <li>Results within 48 hours</li>
+        </ul>
+      </div>
+      <div class="pricing-card" id="planContinuous" onclick="selectPlan('continuous')">
+        <div class="pricing-price" style="font-size: 28px; line-height: 1.3;">$79<span style="font-size: 14px; color: var(--silver); font-weight: 400;">/3mo</span></div>
+        <div class="pricing-name">CONTINUOUS CERTIFICATION</div>
+        <ul class="pricing-features">
+          <li>Full audit + daily re-checks</li>
+          <li>Certification rolls forward daily</li>
+          <li>Revoked immediately on failure</li>
+          <li>Always-current trust score</li>
+          <li>Priority leaderboard listing</li>
+        </ul>
+        <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(240,234,255,0.06);">
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="blockOptions">
+            <button class="skill-tag selected" onclick="selectBlock('3mo', this)" data-block="3mo">3 MO $79</button>
+            <button class="skill-tag" onclick="selectBlock('6mo', this)" data-block="6mo">6 MO $149</button>
+            <button class="skill-tag" onclick="selectBlock('12mo', this)" data-block="12mo">12 MO $249</button>
+          </div>
+          <div style="font-size: 10px; color: var(--slate); margin-top: 8px; font-family: var(--mono);">SAVE UP TO 58% VS MONTHLY</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-full mt-16" id="continueBtn" disabled onclick="showForm()">
+      SELECT A PLAN TO CONTINUE
+    </button>
+  </div>
+
+  <!-- Step 2: Agent details form -->
+  <div id="stepForm" style="display: none; padding-bottom: 60px;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 32px;">
+      <h2>Agent Details</h2>
+      <span id="planBadge" class="badge" style="font-size: 10px; padding: 4px 12px;"></span>
+    </div>
+
+    <form id="certForm" onsubmit="submitForm(event)">
+      <div class="form-group">
+        <label class="form-label">Agent Name *</label>
+        <input type="text" class="form-input" id="agentName" placeholder="e.g., CopyMagic AI" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Description *</label>
+        <textarea class="form-textarea" id="agentDesc" placeholder="What does your agent do? Be specific about its capabilities." required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">How to access *</label>
+        <input type="text" class="form-input" id="agentAccess" placeholder="GitHub URL, API endpoint, or hosted URL" required>
+        <div class="form-hint">We need a way to interact with your agent during testing.</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Category *</label>
+        <select class="form-select" id="agentCategory" required>
+          <option value="">Select a category</option>
+          <option value="marketing">Marketing</option>
+          <option value="support">Customer Support</option>
+          <option value="dev-tools">Developer Tools</option>
+          <option value="finance">Finance</option>
+          <option value="legal">Legal</option>
+          <option value="research">Research</option>
+          <option value="sales">Sales</option>
+          <option value="general">General</option>
+          <option value="crypto">Crypto / Web3</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">0G Chain Address</label>
+        <input type="text" class="form-input" id="agentAddress" placeholder="0x... (if the agent has an on-chain identity)">
+        <div class="form-hint">Contract address on 0G Galileo testnet. Used for on-chain verification.</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Claimed Skills</label>
+        <div class="form-hint mb-8">Select the skills your agent claims. We test each one individually.</div>
+        <div class="skill-tags" id="skillTags"></div>
+        <input type="text" class="form-input mt-8" id="customSkill" placeholder="Add a custom skill and press Enter">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Operator / Company</label>
+        <input type="text" class="form-input" id="agentOperator" placeholder="Who runs this agent?">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Contact Email *</label>
+        <input type="email" class="form-input" id="contactEmail" placeholder="Where we send the results" required>
+      </div>
+
+      <button type="submit" class="btn btn-full mt-16">
+        SUBMIT FOR CERTIFICATION
+      </button>
+
+      <p style="text-align: center; font-size: 11px; color: var(--slate); margin-top: 16px;">
+        Payment is processed after submission. You will receive a confirmation email.
+      </p>
+    </form>
+  </div>
+</main>
+
+<!-- Confirmation Modal -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal-box">
+    <div class="modal-icon">&#10003;</div>
+    <h2 style="margin-bottom: 12px;">Submission Received</h2>
+    <p style="color: var(--silver); font-size: 13px; line-height: 1.7; margin-bottom: 24px;">
+      Your agent has been submitted for certification.
+      You will receive a confirmation email with next steps and payment details.
+      Testing begins within 24 hours of payment.
+    </p>
+    <div class="card" style="text-align: left; margin-bottom: 24px;">
+      <div id="confirmDetails" style="font-family: var(--mono); font-size: 11px; color: var(--silver);"></div>
+    </div>
+    <a href="index.html" class="btn">BACK TO HOME</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-brand">DANTIAN</div>
+  <div class="footer-links">
+    Agent trust verification
+  </div>
+</footer>
+
+<script>
+  // ── Plan selection ──────────────────────────────────────────────────
+  let selectedPlan = null;
+  let selectedBlock = '3mo';
+
+  const blockPrices = { '3mo': '$79', '6mo': '$149', '12mo': '$249' };
+  const blockLabels = { '3mo': '3-month', '6mo': '6-month', '12mo': '12-month' };
+
+  window.selectBlock = function(block, el) {
+    selectedBlock = block;
+    document.querySelectorAll('#blockOptions .skill-tag').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+    // Update price display
+    const priceEl = document.querySelector('#planContinuous .pricing-price');
+    priceEl.innerHTML = blockPrices[block] + '<span style="font-size: 14px; color: var(--silver); font-weight: 400;">/' + block + '</span>';
+    // If continuous is already selected, update the button
+    if (selectedPlan === 'continuous') {
+      document.getElementById('continueBtn').textContent = 'CONTINUE WITH CONTINUOUS (' + blockPrices[block] + '/' + block + ')';
+    }
+  };
+
+  window.selectPlan = function(plan) {
+    selectedPlan = plan;
+    document.getElementById('planSingle').classList.toggle('selected', plan === 'single');
+    document.getElementById('planContinuous').classList.toggle('selected', plan === 'continuous');
+    const btn = document.getElementById('continueBtn');
+    btn.disabled = false;
+    if (plan === 'single') {
+      btn.textContent = 'CONTINUE WITH SINGLE CERTIFICATION ($49)';
+    } else {
+      btn.textContent = 'CONTINUE WITH CONTINUOUS (' + blockPrices[selectedBlock] + '/' + selectedBlock + ')';
+    }
+  };
+
+  window.showForm = function() {
+    if (!selectedPlan) return;
+    document.getElementById('stepPricing').style.display = 'none';
+    document.getElementById('stepForm').style.display = 'block';
+    const badge = document.getElementById('planBadge');
+    if (selectedPlan === 'single') {
+      badge.textContent = 'SINGLE $49 / 30 DAYS';
+    } else {
+      badge.textContent = 'CONTINUOUS ' + blockPrices[selectedBlock] + ' / ' + blockLabels[selectedBlock].toUpperCase();
+    }
+    badge.style.borderColor = 'var(--signal-green)';
+    badge.style.color = 'var(--signal-green)';
+  };
+
+  // ── Skill tags ──────────────────────────────────────────────────────
+  const commonSkills = [
+    'Question answering', 'Text generation', 'Summarization', 'Code generation',
+    'Data extraction', 'Translation', 'Classification', 'Sentiment analysis',
+    'Image analysis', 'API integration'
+  ];
+
+  const selectedSkills = new Set();
+  const tagsContainer = document.getElementById('skillTags');
+
+  function renderSkillTags() {
+    const all = [...commonSkills, ...Array.from(selectedSkills).filter(s => !commonSkills.includes(s))];
+    tagsContainer.innerHTML = all.map(s =>
+      `<div class="skill-tag${selectedSkills.has(s) ? ' selected' : ''}" onclick="toggleSkill('${s.replace(/'/g, "\\'")}')">${s}</div>`
+    ).join('');
+  }
+
+  window.toggleSkill = function(skill) {
+    if (selectedSkills.has(skill)) {
+      selectedSkills.delete(skill);
+    } else {
+      selectedSkills.add(skill);
+    }
+    renderSkillTags();
+  };
+
+  renderSkillTags();
+
+  // ── Pre-fill from URL params (coming from search) ──────────────────
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('address')) {
+    document.getElementById('agentAddress').value = urlParams.get('address');
+    document.getElementById('agentAccess').value = urlParams.get('address');
+  }
+  if (urlParams.get('name')) {
+    document.getElementById('agentName').value = urlParams.get('name');
+  }
+  if (urlParams.has('address')) {
+    document.getElementById('agentCategory').value = 'crypto';
+  }
+
+  // Custom skill input
+  document.getElementById('customSkill').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const val = e.target.value.trim();
+      if (val) {
+        selectedSkills.add(val);
+        renderSkillTags();
+        e.target.value = '';
+      }
+    }
+  });
+
+  // ── Form submission ─────────────────────────────────────────────────
+  window.submitForm = function(e) {
+    e.preventDefault();
+
+    const name = document.getElementById('agentName').value.trim();
+    const desc = document.getElementById('agentDesc').value.trim();
+    const access = document.getElementById('agentAccess').value.trim();
+    const category = document.getElementById('agentCategory').value;
+    const operator = document.getElementById('agentOperator').value.trim();
+    const email = document.getElementById('contactEmail').value.trim();
+    const planLabel = selectedPlan === 'single' ? 'Single Certification (30-day, $49)' : 'Continuous ' + blockLabels[selectedBlock] + ' (' + blockPrices[selectedBlock] + ')';
+    const skills = Array.from(selectedSkills);
+
+    // Show confirmation modal
+    document.getElementById('confirmDetails').innerHTML = `
+      <div style="padding: 4px 0; border-bottom: 1px solid rgba(240,234,255,0.04);">AGENT: ${name}</div>
+      <div style="padding: 4px 0; border-bottom: 1px solid rgba(240,234,255,0.04);">PLAN: ${planLabel}</div>
+      <div style="padding: 4px 0; border-bottom: 1px solid rgba(240,234,255,0.04);">CATEGORY: ${category}</div>
+      <div style="padding: 4px 0; border-bottom: 1px solid rgba(240,234,255,0.04);">SKILLS: ${skills.length > 0 ? skills.join(', ') : 'none specified'}</div>
+      <div style="padding: 4px 0;">EMAIL: ${email}</div>
+    `;
+    document.getElementById('confirmModal').classList.add('show');
+  };
+</script>
+
+</body>
+</html>

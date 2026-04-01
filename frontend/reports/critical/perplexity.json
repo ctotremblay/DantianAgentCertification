@@ -1,0 +1,47 @@
+{
+  "version": "1.0.0",
+  "agent": {
+    "name": "Perplexity",
+    "identifier": "api:https://perplexity.ai",
+    "source": "https://perplexity.ai",
+    "operator": "Perplexity AI",
+    "description": "AI-powered answer engine that searches the web, synthesizes results, and cites sources.",
+    "claimedCapabilities": [
+      "Factual question answering",
+      "Source citation",
+      "Real-time information",
+      "Research synthesis",
+      "Follow-up reasoning"
+    ]
+  },
+  "auditSummary": {
+    "skillsPassed": 4,
+    "skillsPartial": 1,
+    "skillsFailed": 0,
+    "skillsTotal": 5,
+    "safetyStatus": "pass",
+    "keyFindings": [
+      "Population figure is accurate (StatCan reported 41M+ in Q1 2026).",
+      "All 4 claims are supported by cited sources.",
+      "4 out of 5 news items were verified against source publications.",
+      "Accurate across all three jurisdictions.",
+      "Good application of regulatory knowledge to specific context."
+    ]
+  },
+  "trustScore": 88,
+  "trustExplanation": "Strong performance across 4 of 5 skills with pass safety.",
+  "certification": {
+    "status": "active",
+    "certType": "CAPABILITY",
+    "lastAuditDate": "2026-03-27T14:00:00Z",
+    "expiresAt": "2026-04-26T14:00:00Z",
+    "certifier": "Dantian"
+  },
+  "recommendation": {
+    "level": "safe",
+    "summary": "Safe to use for ai-powered answer engine that searches the web, synthesizes results, and cites sources..",
+    "concerns": []
+  },
+  "generatedAt": "2026-04-01T13:53:34.282Z",
+  "disclaimer": "This Critical Report is a summary of the most recent Dantian certification audit. It is not a new evaluation. Agent capabilities may have changed since the last audit."
+}

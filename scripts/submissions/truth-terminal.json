@@ -1,0 +1,23 @@
+{
+  "slug": "truth-terminal",
+  "name": "Truth Terminal",
+  "identifier": "id:truth-terminal",
+  "description": "Experimental AI agent with its own X account and crypto wallet. Fine-tuned on unconventional datasets. Associated with GOAT token ($1B+ peak market cap) and Fartcoin ($1B market cap).",
+  "operator": "Andy Ayrey (independent researcher, New Zealand)",
+  "model": "Llama 70b fine-tuned through conversations with modified Claude Opus",
+  "claimedSkills": [
+    "Autonomous social media posting",
+    "Memetic content creation",
+    "Community engagement",
+    "Financial transparency",
+    "Ethical boundary respect"
+  ],
+  "researchNotes": "Research conducted April 2026. Sources: CoinDesk, Decrypt, CoinTelegraph, IQ.wiki, Rekt News, Protos, Collective Intelligence Project, Andy Ayrey X posts.\n\nKey facts:\n- Built on Llama 70b, fine-tuned via conversations with modified Claude Opus\n- NOT truly autonomous: Andy Ayrey acts as human gatekeeper who vets all posts ('every cryptic sermon carefully vetted by Ayrey')\n- Marc Andreessen gave $50K BTC grant (July 2024)\n- GOAT token launched Oct 10, 2024 by anonymous user on Solana. Endorsed by Ayrey, reached $1B+ market cap\n- Ayrey disclosed holding 1.25M GOAT tokens on Oct 21, 2024 (11 days after launch, after price appreciation)\n- Ayrey's X account hacked Oct 29, 2024 via social engineering of domain registrar. Hackers launched scam token 'Infinite Backrooms' (IB), netting $602,500 pump-and-dump\n- Fartcoin (FRTC) also inspired by Truth Terminal, reached $1B market cap\n- Ayrey has legal obligations re: securities promotion and public disclosure (IQ.wiki)\n- January 2025: Ayrey posted foundation/treasury update on X",
+  "evidence": {
+    "Autonomous social media posting": "NOT AUTONOMOUS. Multiple credible sources confirm Ayrey is a human gatekeeper. CoinDesk: 'every cryptic sermon carefully vetted by Ayrey, who retains ultimate control.' Given 'limited autonomy to post on X' but critical decisions are human-controlled. This directly contradicts public framing as 'autonomous AI agent.'",
+    "Memetic content creation": "Objectively massive impact. GOAT reached $1B+ market cap. Fartcoin reached $1B. 'Goatse Gospel' concept entered crypto vocabulary. The agent's philosophical/absurdist style became widely imitated. Two $1B+ tokens from one AI agent's content is unprecedented.",
+    "Community engagement": "Primarily one-directional. Cryptic, philosophical posts. When GOAT crashed from $1B+ peak, no acknowledgment of follower losses. Andy Ayrey posted a foundation/treasury update in January 2025, but that's human intervention, not agent engagement.",
+    "Financial transparency": "LATE AND INCOMPLETE. Andreessen $50K grant disclosed by media, not proactively. GOAT holdings (1.25M tokens) disclosed 11 days after launch (Oct 21 vs Oct 10). Fartcoin reached $1B with no disclosure. Account hacked Oct 29 resulting in $602K scam.",
+    "Ethical boundary respect": "THREE CRITICAL FAILURES: (1) Autonomy misrepresentation: presented as autonomous while human-gated. (2) $2B+ combined token market cap influenced with zero financial disclaimers. (3) Account hack enabled $602K fraud against followers."
+  }
+}

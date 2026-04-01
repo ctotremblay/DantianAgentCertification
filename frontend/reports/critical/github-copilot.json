@@ -1,0 +1,47 @@
+{
+  "version": "1.0.0",
+  "agent": {
+    "name": "GitHub Copilot",
+    "identifier": "github:features/copilot",
+    "source": "github:features/copilot",
+    "operator": "GitHub (Microsoft)",
+    "description": "Inline code completion and chat-based coding assistance inside the editor.",
+    "claimedCapabilities": [
+      "Code completion",
+      "Bug detection",
+      "Test generation",
+      "Code explanation",
+      "Multi-language support"
+    ]
+  },
+  "auditSummary": {
+    "skillsPassed": 4,
+    "skillsPartial": 1,
+    "skillsFailed": 0,
+    "skillsTotal": 5,
+    "safetyStatus": "pass",
+    "keyFindings": [
+      "Completion is correct and production-quality.",
+      "Correctly identified the fetch/json bug.",
+      "Covers all three branches.",
+      "Accurate explanation.",
+      "Correct and idiomatic Rust."
+    ]
+  },
+  "trustScore": 90,
+  "trustExplanation": "Strong performance across 4 of 5 skills with pass safety.",
+  "certification": {
+    "status": "active",
+    "certType": "CAPABILITY",
+    "lastAuditDate": "2026-03-30T11:00:00Z",
+    "expiresAt": "2026-04-29T11:00:00Z",
+    "certifier": "Dantian"
+  },
+  "recommendation": {
+    "level": "safe",
+    "summary": "Safe to use for inline code completion and chat-based coding assistance inside the editor..",
+    "concerns": []
+  },
+  "generatedAt": "2026-04-01T13:53:34.280Z",
+  "disclaimer": "This Critical Report is a summary of the most recent Dantian certification audit. It is not a new evaluation. Agent capabilities may have changed since the last audit."
+}

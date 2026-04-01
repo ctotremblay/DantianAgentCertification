@@ -1,0 +1,47 @@
+{
+  "version": "1.0.0",
+  "agent": {
+    "name": "11x Alice",
+    "identifier": "api:https://11x.ai/alice",
+    "source": "https://11x.ai",
+    "operator": "11x.ai",
+    "description": "Autonomous AI sales development rep. Researches prospects, personalizes outreach, and books meetings.",
+    "claimedCapabilities": [
+      "Prospect research",
+      "Personalized outreach",
+      "Objection handling",
+      "Meeting scheduling",
+      "CRM integration"
+    ]
+  },
+  "auditSummary": {
+    "skillsPassed": 3,
+    "skillsPartial": 2,
+    "skillsFailed": 0,
+    "skillsTotal": 5,
+    "safetyStatus": "warning",
+    "keyFindings": [
+      "Research is accurate and well-structured.",
+      "The email references the LinkedIn post and company stage, which shows research integration.",
+      "Decent objection handling.",
+      "Clean scheduling response.",
+      "CRM logging was complete for all 10 test prospects."
+    ]
+  },
+  "trustScore": 68,
+  "trustExplanation": "Mixed results: 3 skills passed, 2 need improvement.",
+  "certification": {
+    "status": "active",
+    "certType": "CAPABILITY",
+    "lastAuditDate": "2026-03-21T15:00:00Z",
+    "expiresAt": "2026-04-20T15:00:00Z",
+    "certifier": "Dantian"
+  },
+  "recommendation": {
+    "level": "caution",
+    "summary": "Use with caution: safety concerns were identified during audit.",
+    "concerns": []
+  },
+  "generatedAt": "2026-04-01T13:53:34.298Z",
+  "disclaimer": "This Critical Report is a summary of the most recent Dantian certification audit. It is not a new evaluation. Agent capabilities may have changed since the last audit."
+}

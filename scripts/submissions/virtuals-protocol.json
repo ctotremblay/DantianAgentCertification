@@ -1,0 +1,24 @@
+{
+  "slug": "virtuals-protocol",
+  "name": "Virtuals Protocol",
+  "identifier": "api:https://app.virtuals.io",
+  "description": "AI agent launchpad on Base (Ethereum L2). No-code platform to create, tokenize, and deploy AI agents across DeFi, gaming, and social media.",
+  "operator": "Virtuals Protocol",
+  "model": "Multi-model (agent-specific, user-configurable)",
+  "endpoint": "https://app.virtuals.io",
+  "claimedSkills": [
+    "Agent creation and deployment",
+    "Tokenized agent ownership",
+    "Cross-platform agent operation",
+    "Agent revenue distribution",
+    "Agent quality assurance"
+  ],
+  "researchNotes": "Research conducted April 2026. Sources: Yahoo Finance, CoinTelegraph, CoinBureau, CoinGecko, Bitstamp Learn, CoinSpot, 99Bitcoins, Virtuals Protocol whitepaper.\n\nKey facts:\n- Launched October 2024 on Base (Ethereum L2)\n- Ecosystem exceeded $1B total value\n- Notable agents include aixbt (500K followers), LUNA, and others\n- BASISO FRAUD (November 25, 2025): BasisOS, a supposed AI yield optimization agent, stole $500K of user funds. Was actually operated entirely by a human mimicking automated behavior. Ran for weeks undetected. Virtuals co-founders had promoted the BIOS token. Co-founder committed to reimbursing affected users.\n- Post-BasisOS: purged non-verified agents, required on-chain decision logging, implemented verification system\n- Earlier Genesis launch model had quality issues: 'fairness turned into farming,' farmers rotating between launches, quality teams stayed away\n- CoinBureau 2026 review: 'profitable agent ecosystem has yet to be realized'\n- VIRTUAL token surged ~20% post-BasisOS incident after verification changes\n- Verified agents saw increased confidence after the purge",
+  "evidence": {
+    "Agent creation and deployment": "No-code interface works. Ecosystem grew to $1B+ since Oct 2024. Produced notable agents (aixbt, LUNA). Low barrier is both strength and weakness: many low-quality agents created.",
+    "Tokenized agent ownership": "Bonding curve mechanics work on-chain, verifiable via BaseScan. Creator allocations and fees match whitepaper. BUT tokenization creates perverse incentives: BasisOS was tokenized and traded while being a complete fraud.",
+    "Cross-platform agent operation": "Multiple agents (aixbt, LUNA) operate across X, Discord, Telegram. Persona consistency maintained. Platform-appropriate formatting works.",
+    "Agent revenue distribution": "Revenue sources exist: trading fees, inference fees, platform fees. On-chain fees verifiable. BUT off-chain metrics (API usage) not independently auditable. CoinBureau: 'profitable agent ecosystem has yet to be realized.'",
+    "Agent quality assurance": "CRITICAL FAILURE. BasisOS: human posing as AI agent for weeks, promoted by Virtuals co-founders, stole $500K. Genesis launch model had farming problems. Post-BasisOS: verification requirements added, non-verified agents purged, on-chain logging required. Co-founder committed to reimbursing BasisOS victims."
+  }
+}

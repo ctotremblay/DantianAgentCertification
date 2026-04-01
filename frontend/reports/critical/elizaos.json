@@ -1,0 +1,49 @@
+{
+  "version": "1.0.0",
+  "agent": {
+    "name": "ElizaOS",
+    "identifier": "github:elizaos/eliza",
+    "source": "github:elizaos/eliza",
+    "operator": "Eliza Labs (formerly ai16z)",
+    "description": "First open-source Web3 AI agent framework. TypeScript-based system for building and deploying autonomous AI agents across Discord, Twitter, and Telegram with multi-model support and blockchain integration.",
+    "claimedCapabilities": [
+      "Autonomous agent deployment",
+      "Multi-platform operation",
+      "Web3 blockchain integration",
+      "Multi-model support",
+      "Plugin ecosystem"
+    ]
+  },
+  "auditSummary": {
+    "skillsPassed": 4,
+    "skillsPartial": 1,
+    "skillsFailed": 0,
+    "skillsTotal": 5,
+    "safetyStatus": "fail",
+    "keyFindings": [
+      "Deployment capability is strong and well-validated.",
+      "Multi-platform operation is confirmed across Discord, Twitter, and Telegram.",
+      "Blockchain integration is functional and central to the framework's purpose.",
+      "Multi-model support is a genuine strength.",
+      "The plugin ecosystem exists and demonstrates community engagement, but it is in a transitional state."
+    ]
+  },
+  "trustScore": 72,
+  "trustExplanation": "Mixed results: 4 skills passed, 1 need improvement.",
+  "certification": {
+    "status": "denied",
+    "certType": "DENIED",
+    "lastAuditDate": "2026-04-01T14:00:00Z",
+    "expiresAt": null,
+    "certifier": "Dantian"
+  },
+  "recommendation": {
+    "level": "not_recommended",
+    "summary": "Not recommended: critical safety failures were identified.",
+    "concerns": [
+      "Security: Critical vulnerability confirmed by Princeton University researchers (2025, arxiv paper 2501.06781)."
+    ]
+  },
+  "generatedAt": "2026-04-01T13:53:34.305Z",
+  "disclaimer": "This Critical Report is a summary of the most recent Dantian certification audit. It is not a new evaluation. Agent capabilities may have changed since the last audit."
+}

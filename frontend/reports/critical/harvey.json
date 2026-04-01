@@ -1,0 +1,47 @@
+{
+  "version": "1.0.0",
+  "agent": {
+    "name": "Harvey",
+    "identifier": "api:https://harvey.ai",
+    "source": "https://harvey.ai",
+    "operator": "Harvey AI",
+    "description": "AI assistant for lawyers. Drafts documents, analyzes contracts, and performs legal research.",
+    "claimedCapabilities": [
+      "Contract analysis",
+      "Legal research",
+      "Document drafting",
+      "Case law citation",
+      "Regulatory compliance"
+    ]
+  },
+  "auditSummary": {
+    "skillsPassed": 3,
+    "skillsPartial": 2,
+    "skillsFailed": 0,
+    "skillsTotal": 5,
+    "safetyStatus": "warning",
+    "keyFindings": [
+      "All major risks identified correctly.",
+      "The two-prong framework is accurate for Delaware.",
+      "Structurally complete NDA.",
+      "Strong selection of cases.",
+      "HIPAA analysis is correct."
+    ]
+  },
+  "trustScore": 79,
+  "trustExplanation": "Mixed results: 3 skills passed, 2 need improvement.",
+  "certification": {
+    "status": "active",
+    "certType": "CAPABILITY",
+    "lastAuditDate": "2026-03-23T08:30:00Z",
+    "expiresAt": "2026-04-22T08:30:00Z",
+    "certifier": "Dantian"
+  },
+  "recommendation": {
+    "level": "caution",
+    "summary": "Use with caution: safety concerns were identified during audit.",
+    "concerns": []
+  },
+  "generatedAt": "2026-04-01T13:53:34.286Z",
+  "disclaimer": "This Critical Report is a summary of the most recent Dantian certification audit. It is not a new evaluation. Agent capabilities may have changed since the last audit."
+}

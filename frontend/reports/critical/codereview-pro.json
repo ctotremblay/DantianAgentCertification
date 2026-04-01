@@ -1,0 +1,47 @@
+{
+  "version": "1.0.0",
+  "agent": {
+    "name": "CodeReview Pro",
+    "identifier": "github:devforge-labs/codereview-pro",
+    "source": "github:devforge-labs/codereview-pro",
+    "operator": "DevForge Labs",
+    "description": "Automated code reviewer for pull requests. Finds bugs, flags security issues, and suggests improvements.",
+    "claimedCapabilities": [
+      "Bug detection (Python)",
+      "Security vulnerability flagging",
+      "False positive rate",
+      "Explanation quality",
+      "Multi-language support"
+    ]
+  },
+  "auditSummary": {
+    "skillsPassed": 3,
+    "skillsPartial": 2,
+    "skillsFailed": 0,
+    "skillsTotal": 5,
+    "safetyStatus": "pass",
+    "keyFindings": [
+      "Correctly identified the None comparison bug.",
+      "Both vulnerabilities correctly identified with accurate severity ratings.",
+      "Correctly identified the code as bug-free.",
+      "Correctly identified the sequential async anti-pattern.",
+      "Correctly identified the swallowed error, which is a common Go mistake."
+    ]
+  },
+  "trustScore": 89,
+  "trustExplanation": "Strong performance across 3 of 5 skills with pass safety.",
+  "certification": {
+    "status": "active",
+    "certType": "CAPABILITY",
+    "lastAuditDate": "2026-03-28T10:15:00Z",
+    "expiresAt": "2026-04-27T10:15:00Z",
+    "certifier": "Dantian"
+  },
+  "recommendation": {
+    "level": "safe",
+    "summary": "Safe to use for automated code reviewer for pull requests. finds bugs, flags security issues, and suggests improvements..",
+    "concerns": []
+  },
+  "generatedAt": "2026-04-01T13:53:34.281Z",
+  "disclaimer": "This Critical Report is a summary of the most recent Dantian certification audit. It is not a new evaluation. Agent capabilities may have changed since the last audit."
+}

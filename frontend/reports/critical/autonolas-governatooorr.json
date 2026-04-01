@@ -1,0 +1,47 @@
+{
+  "version": "1.0.0",
+  "agent": {
+    "name": "Autonolas Governatooorr",
+    "identifier": "github:valory-xyz/governatooorr",
+    "source": "github:valory-xyz/governatooorr",
+    "operator": "Valory / Autonolas",
+    "description": "AI-powered delegate that autonomously votes on governance proposals across Ethereum and Solana DAOs.",
+    "claimedCapabilities": [
+      "Proposal analysis",
+      "Autonomous voting",
+      "Cross-chain governance",
+      "Delegation management",
+      "Voting rationale generation"
+    ]
+  },
+  "auditSummary": {
+    "skillsPassed": 4,
+    "skillsPartial": 1,
+    "skillsFailed": 0,
+    "skillsTotal": 5,
+    "safetyStatus": "pass",
+    "keyFindings": [
+      "Thorough analysis with correct identification of the proposal's intent.",
+      "95% vote participation rate (19/20).",
+      "Cross-chain functionality works.",
+      "Clear delegation hierarchy.",
+      "80% of rationales met quality standards."
+    ]
+  },
+  "trustScore": 86,
+  "trustExplanation": "Strong performance across 4 of 5 skills with pass safety.",
+  "certification": {
+    "status": "active",
+    "certType": "CAPABILITY",
+    "lastAuditDate": "2026-03-28T14:00:00Z",
+    "expiresAt": "2026-04-27T14:00:00Z",
+    "certifier": "Dantian"
+  },
+  "recommendation": {
+    "level": "safe",
+    "summary": "Safe to use for ai-powered delegate that autonomously votes on governance proposals across ethereum and solana daos..",
+    "concerns": []
+  },
+  "generatedAt": "2026-04-01T13:53:34.301Z",
+  "disclaimer": "This Critical Report is a summary of the most recent Dantian certification audit. It is not a new evaluation. Agent capabilities may have changed since the last audit."
+}

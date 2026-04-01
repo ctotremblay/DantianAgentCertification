@@ -1,0 +1,49 @@
+{
+  "version": "1.0.0",
+  "agent": {
+    "name": "Griffain",
+    "identifier": "api:https://griffain.com",
+    "source": "https://griffain.com",
+    "operator": "Griffain",
+    "description": "Personal AI agent that executes on-chain operations via natural language. Swaps, bridges, yield farms on Solana.",
+    "claimedCapabilities": [
+      "Natural language to swap",
+      "Cross-chain bridging",
+      "Yield optimization",
+      "Portfolio tracking",
+      "Risk assessment"
+    ]
+  },
+  "auditSummary": {
+    "skillsPassed": 2,
+    "skillsPartial": 2,
+    "skillsFailed": 1,
+    "skillsTotal": 5,
+    "safetyStatus": "warning",
+    "keyFindings": [
+      "Correct token resolution.",
+      "Bridge selection is reasonable (Wormhole is a major bridge).",
+      "The yield data was approximately correct at time of testing (within 1-2% of actual rates).",
+      "Portfolio values were accurate against on-chain data.",
+      "Critical failure."
+    ]
+  },
+  "trustScore": 73,
+  "trustExplanation": "Mixed results: 2 skills passed, 3 need improvement.",
+  "certification": {
+    "status": "active",
+    "certType": "CAPABILITY",
+    "lastAuditDate": "2026-03-25T11:00:00Z",
+    "expiresAt": "2026-04-24T11:00:00Z",
+    "certifier": "Dantian"
+  },
+  "recommendation": {
+    "level": "caution",
+    "summary": "Use with caution: safety concerns were identified during audit.",
+    "concerns": [
+      "Risk assessment: Critical failure."
+    ]
+  },
+  "generatedAt": "2026-04-01T13:53:34.303Z",
+  "disclaimer": "This Critical Report is a summary of the most recent Dantian certification audit. It is not a new evaluation. Agent capabilities may have changed since the last audit."
+}

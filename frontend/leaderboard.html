@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dantian — Agent Leaderboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">DANTIAN</a>
+  <div class="nav-links">
+    <a href="index.html">Verify</a>
+    <a href="leaderboard.html" class="active">Leaderboard</a>
+    <a href="submit.html" class="nav-cta">Get Certified</a>
+  </div>
+</nav>
+
+<main>
+  <div class="leaderboard-header">
+    <h1>Agent Leaderboard</h1>
+    <p class="subtitle mt-8">
+      Ranked by trust score. Only agents with active certifications appear.
+      Expired agents are removed automatically.
+    </p>
+    <div class="filter-tabs" id="filterTabs"></div>
+  </div>
+
+  <div id="leaderboard"></div>
+
+  <div style="text-align: center; padding: 40px 0 60px;">
+    <p style="font-size: 13px; color: var(--slate); margin-bottom: 16px;">
+      Agent not listed? Get it certified.
+    </p>
+    <a href="submit.html" class="btn btn-outline btn-sm">SUBMIT FOR CERTIFICATION</a>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-brand">DANTIAN</div>
+  <div class="footer-links">
+    Agent trust verification
+  </div>
+</footer>
+
+<script type="module">
+  // ── Load data ───────────────────────────────────────────────────────
+  let allAgents = [];
+  let categories = [];
+
+  try {
+    const resp = await fetch('data/agents.json');
+    const data = await resp.json();
+    allAgents = data.agents;
+    categories = data.categories;
+  } catch (e) {
+    console.error('Failed to load data:', e);
+  }
+
+  const catLabels = {
+    'marketing': 'Marketing', 'support': 'Support', 'dev-tools': 'Dev Tools',
+    'finance': 'Finance', 'legal': 'Legal', 'research': 'Research',
+    'crypto': 'Crypto', 'general': 'General', 'sales': 'Sales'
+  };
+
+  // ── Filter tabs ─────────────────────────────────────────────────────
+  const tabsContainer = document.getElementById('filterTabs');
+  let activeFilter = 'all';
+
+  tabsContainer.innerHTML = categories.map(c =>
+    `<button class="filter-tab${c.id === 'all' ? ' active' : ''}" data-filter="${c.id}">${c.label}</button>`
+  ).join('');
+
+  tabsContainer.addEventListener('click', (e) => {
+    if (!e.target.classList.contains('filter-tab')) return;
+    activeFilter = e.target.dataset.filter;
+    tabsContainer.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    e.target.classList.add('active');
+    renderLeaderboard();
+  });
+
+  // ── Render leaderboard ──────────────────────────────────────────────
+  function renderLeaderboard() {
+    const now = Date.now();
+
+    // Filter: only certified + not expired
+    let filtered = allAgents.filter(a => {
+      if (!a.certified) return false;
+      if (!a.expiresAt) return false;
+      if (new Date(a.expiresAt).getTime() < now) return false;
+      if (activeFilter !== 'all' && a.category !== activeFilter) return false;
+      return true;
+    });
+
+    // Sort by trust score descending
+    filtered.sort((a, b) => {
+      if (b.trustScore !== a.trustScore) return b.trustScore - a.trustScore;
+      if (b.skillsPassed !== a.skillsPassed) return b.skillsPassed - a.skillsPassed;
+      return new Date(b.lastTested) - new Date(a.lastTested);
+    });
+
+    const container = document.getElementById('leaderboard');
+
+    if (filtered.length === 0) {
+      container.innerHTML = `
+        <div style="text-align: center; padding: 60px 0; color: var(--slate);">
+          <p style="font-family: var(--mono); font-size: 12px; letter-spacing: 2px;">NO ACTIVE AGENTS IN THIS CATEGORY</p>
+        </div>
+      `;
+      return;
+    }
+
+    let html = `
+      <div class="lb-row lb-row-header">
+        <div class="lb-col-label" style="text-align: center;">#</div>
+        <div class="lb-col-label">Agent</div>
+        <div class="lb-col-label" style="text-align: center;">Category</div>
+        <div class="lb-col-label" style="text-align: center;">Score</div>
+        <div class="lb-col-label lb-skills" style="text-align: center;">Skills</div>
+        <div class="lb-col-label lb-expires" style="text-align: center;">Expires</div>
+      </div>
+    `;
+
+    filtered.forEach((a, i) => {
+      const scoreClass = a.trustScore >= 85 ? 'score-green' : a.trustScore >= 70 ? 'score-amber' : 'score-red';
+      const daysLeft = Math.ceil((new Date(a.expiresAt) - now) / 86400000);
+      const expiringClass = daysLeft <= 7 ? ' expiring-soon' : '';
+
+      const safetyBadge = a.safetyStatus === 'pass' ? '' :
+        a.safetyStatus === 'warning' ? ' <span class="badge badge-warning" style="font-size:8px; padding:1px 6px;">!</span>' : '';
+
+      html += `
+        <div class="lb-row" onclick="window.location.href='agent.html?id=${a.slug}'">
+          <div class="lb-rank">${i + 1}</div>
+          <div class="lb-agent">
+            <div class="lb-agent-name">${a.name}${safetyBadge}</div>
+            <div class="lb-agent-desc">${a.description}</div>
+          </div>
+          <div class="lb-category">${catLabels[a.category] || a.category}</div>
+          <div class="lb-score ${scoreClass}">${a.trustScore}</div>
+          <div class="lb-skills">${a.skillsPassed}/${a.skillsTotal}</div>
+          <div class="lb-expires${expiringClass}">${daysLeft}d</div>
+        </div>
+      `;
+    });
+
+    container.innerHTML = html;
+  }
+
+  renderLeaderboard();
+</script>
+
+</body>
+</html>
