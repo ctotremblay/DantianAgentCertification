@@ -105,6 +105,23 @@ async function inference(systemPrompt, userPrompt, maxTokens = 2000) {
     }
   }
 
+  // Try Google Gemini (free tier)
+  if (process.env.GEMINI_API_KEY) {
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: systemPrompt }] },
+        contents: [{ parts: [{ text: userPrompt }] }],
+        generationConfig: { maxOutputTokens: maxTokens, temperature: 0.3 },
+      }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      return data.candidates?.[0]?.content?.parts?.[0]?.text || null;
+    }
+  }
+
   return null;
 }
 
@@ -404,7 +421,8 @@ async function main() {
 
   const submission = JSON.parse(fs.readFileSync(configPath, "utf-8"));
   const resolved = resolveAgentId(submission.identifier);
-  const hasLLM = !!(process.env.ANTHROPIC_API_KEY || process.env.OPENAI_API_KEY);
+  const llmProvider = process.env.ANTHROPIC_API_KEY ? "Anthropic (Claude Sonnet)" : process.env.OPENAI_API_KEY ? "OpenAI (GPT-4o)" : process.env.GEMINI_API_KEY ? "Google (Gemini Flash)" : null;
+  const hasLLM = !!llmProvider;
 
   console.log("╔══════════════════════════════════════════╗");
   console.log("║     DANTIAN CERTIFIER — LIVE DEMO        ║");
@@ -412,7 +430,7 @@ async function main() {
   console.log(`  Agent:    ${submission.name}`);
   console.log(`  Address:  ${resolved.address}`);
   console.log(`  Skills:   ${submission.claimedSkills.length} claimed`);
-  console.log(`  LLM:      ${hasLLM ? "YES" : "NO (demo mode)"}\n`);
+  console.log(`  LLM:      ${hasLLM ? llmProvider : "NO (demo mode)"}\n`);
   console.log("── Step 1: Certifier Agent ──\n");
 
   let result;
