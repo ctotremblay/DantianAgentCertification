@@ -289,6 +289,163 @@
       line-height: 1.7;
     }
 
+    /* Report section */
+    .report-toggle {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--silver);
+      background: none;
+      border: 1px solid var(--graphite);
+      padding: 8px 16px;
+      cursor: pointer;
+      letter-spacing: 1px;
+      margin-top: 12px;
+      width: 100%;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+    .report-toggle:hover { border-color: var(--starlight); color: var(--starlight); }
+
+    .report-detail {
+      display: none;
+      margin-top: 16px;
+      border: 1px solid var(--graphite);
+      background: var(--abyss);
+    }
+    .report-detail.open { display: block; }
+
+    .report-section {
+      padding: 20px;
+      border-bottom: 1px solid rgba(240, 234, 255, 0.04);
+    }
+    .report-section:last-child { border-bottom: none; }
+
+    .report-section-title {
+      font-family: var(--display);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      color: var(--silver);
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+
+    .skill-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(240, 234, 255, 0.04);
+      cursor: pointer;
+    }
+    .skill-row:last-child { border-bottom: none; }
+    .skill-row:hover { background: rgba(240, 234, 255, 0.02); }
+
+    .skill-name {
+      font-family: var(--body);
+      font-size: 13px;
+      color: var(--moonstone);
+      flex: 1;
+    }
+
+    .skill-score {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--silver);
+      margin: 0 16px;
+      min-width: 40px;
+      text-align: right;
+    }
+
+    .skill-badge {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 1px;
+      padding: 2px 8px;
+      border: 1px solid;
+      min-width: 52px;
+      text-align: center;
+    }
+    .skill-badge.pass { color: var(--signal-green); border-color: rgba(16, 185, 129, 0.3); }
+    .skill-badge.fail { color: var(--signal-red); border-color: rgba(239, 68, 68, 0.3); }
+    .skill-badge.partial { color: var(--signal-amber); border-color: rgba(245, 158, 11, 0.3); }
+
+    .skill-detail {
+      display: none;
+      padding: 12px 0 4px 0;
+    }
+    .skill-detail.open { display: block; }
+
+    .skill-evidence {
+      font-family: var(--body);
+      font-size: 12px;
+      color: var(--silver);
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+
+    .skill-test-block {
+      background: var(--obsidian);
+      border: 1px solid rgba(240, 234, 255, 0.04);
+      padding: 12px;
+      margin-top: 8px;
+    }
+
+    .test-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 2px;
+      color: var(--slate);
+      margin-bottom: 4px;
+    }
+
+    .test-content {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--moonstone);
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .safety-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(240, 234, 255, 0.04);
+    }
+    .safety-row:last-child { border-bottom: none; }
+
+    .safety-name {
+      font-family: var(--body);
+      font-size: 13px;
+      color: var(--moonstone);
+    }
+
+    .verdict-score {
+      font-family: var(--display);
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--starlight);
+      text-align: center;
+      padding: 8px 0;
+    }
+    .verdict-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--slate);
+      text-align: center;
+      letter-spacing: 2px;
+      margin-bottom: 16px;
+    }
+    .verdict-summary {
+      font-family: var(--body);
+      font-size: 13px;
+      color: var(--silver);
+      line-height: 1.7;
+    }
+
     footer {
       width: 100%;
       padding: 24px;
@@ -334,18 +491,20 @@
 <main>
   <h1>Verify an Agent</h1>
   <p class="subtitle">
-    Paste any agent address to check its certification status on 0G Chain.
+    Check any agent's certification status on 0G Chain.
+    Paste a wallet address, GitHub repo, API endpoint, or agent name.
     Certifications are time-bound. Expired means re-verification is needed.
   </p>
 
   <div class="search-box">
     <input
       type="text"
-      id="agentAddress"
-      placeholder="0x..."
+      id="agentInput"
+      placeholder="0x address, github:owner/repo, https://..., or agent name"
       spellcheck="false"
       autocomplete="off"
     >
+    <div id="idTypeHint" style="font-family: var(--mono); font-size: 10px; color: var(--slate); padding: 6px 0; letter-spacing: 1px; min-height: 22px;"></div>
   </div>
 
   <button class="btn" id="verifyBtn" onclick="verifyAgent()">
@@ -382,6 +541,153 @@
   const CERT_TYPES = ["IDENTITY", "CAPABILITY", "SAFETY", "COMPLIANCE"];
   const CERT_CLASSES = ["identity", "capability", "safety", "compliance"];
 
+  // ── Agent ID resolution ───────────────────────────────────────────
+  // Same logic as the backend: any identifier -> deterministic address.
+
+  function detectIdType(input) {
+    const t = input.trim();
+    if (/^0x[0-9a-fA-F]{40}$/.test(t)) return "address";
+    if (t.startsWith("github:") || t.startsWith("https://github.com/") || t.startsWith("http://github.com/") || /^[a-zA-Z0-9_.-]+\/[a-zA-Z0-9_.-]+$/.test(t)) return "github";
+    if (t.startsWith("api:") || t.startsWith("https://") || t.startsWith("http://")) return "api";
+    return "id";
+  }
+
+  function normalizeId(input, type) {
+    const t = input.trim();
+    if (type === "address") return t.toLowerCase();
+    if (type === "github") {
+      let ownerRepo = t;
+      if (ownerRepo.startsWith("github:")) ownerRepo = ownerRepo.slice(7);
+      else if (ownerRepo.includes("github.com/")) ownerRepo = ownerRepo.split("github.com/")[1];
+      ownerRepo = ownerRepo.replace(/\.git$/, "").replace(/\/+$/, "");
+      const parts = ownerRepo.split("/").filter(Boolean);
+      if (parts.length >= 2) ownerRepo = parts[0] + "/" + parts[1];
+      return "github:" + ownerRepo.toLowerCase();
+    }
+    if (type === "api") {
+      let url = t;
+      if (url.startsWith("api:")) url = url.slice(4);
+      return "api:" + url.replace(/\/+$/, "").toLowerCase();
+    }
+    return "id:" + t.toLowerCase();
+  }
+
+  function resolveAgentId(input) {
+    const type = detectIdType(input);
+    const canonical = normalizeId(input, type);
+    if (type === "address") {
+      return { original: input.trim(), canonical, address: ethers.getAddress(input.trim()), type };
+    }
+    const hash = ethers.keccak256(ethers.toUtf8Bytes(canonical));
+    const raw = "0x" + hash.slice(2, 42);
+    return { original: input.trim(), canonical, address: ethers.getAddress(raw), type };
+  }
+
+  const ID_TYPE_LABELS = {
+    address: "WALLET ADDRESS",
+    github: "GITHUB REPOSITORY",
+    api: "API ENDPOINT",
+    id: "AGENT IDENTIFIER",
+  };
+
+  // Live hint as user types
+  const agentInputEl = document.getElementById("agentInput");
+  const hintEl = document.getElementById("idTypeHint");
+  agentInputEl.addEventListener("input", () => {
+    const val = agentInputEl.value.trim();
+    if (!val) { hintEl.textContent = ""; return; }
+    const type = detectIdType(val);
+    hintEl.textContent = ID_TYPE_LABELS[type];
+  });
+
+  // ── Report loading ─────────────────────────────────────────────────
+  // Try to load report JSON from local reports/ directory by hash
+  async function loadReport(reportHash) {
+    try {
+      const resp = await fetch(`reports/${reportHash}.json`);
+      if (resp.ok) return await resp.json();
+    } catch {}
+    return null;
+  }
+
+  function renderReport(report) {
+    if (!report) return '';
+    let html = '';
+
+    // Skills section
+    html += `<div class="report-section">
+      <div class="report-section-title">Skill Verification</div>
+      <div style="font-family: var(--mono); font-size: 11px; color: var(--slate); margin-bottom: 12px;">
+        ${report.verdict.skillsVerified}/${report.verdict.skillsClaimed} claimed skills verified
+      </div>`;
+
+    report.skills.forEach((s, i) => {
+      const badgeClass = s.result === 'pass' ? 'pass' : s.result === 'fail' ? 'fail' : 'partial';
+      const scoreText = s.score != null ? s.score : '';
+      html += `
+        <div>
+          <div class="skill-row" onclick="document.getElementById('skill-${i}').classList.toggle('open')">
+            <span class="skill-name">${s.skill}</span>
+            <span class="skill-score">${scoreText}</span>
+            <span class="skill-badge ${badgeClass}">${s.result.toUpperCase()}</span>
+          </div>
+          <div class="skill-detail" id="skill-${i}">
+            <div class="skill-evidence">${s.evidence}</div>`;
+
+      if (s.test) {
+        html += `<div class="skill-test-block">
+              <div class="test-label">PROMPT</div>
+              <div class="test-content">${s.test.prompt}</div>
+            </div>
+            <div class="skill-test-block" style="margin-top: 4px;">
+              <div class="test-label">AGENT RESPONSE (${s.test.responseTime || ''})</div>
+              <div class="test-content">${s.test.actualResponse}</div>
+            </div>`;
+      }
+
+      html += `</div></div>`;
+    });
+    html += `</div>`;
+
+    // Safety section
+    if (report.safety) {
+      html += `<div class="report-section"><div class="report-section-title">Safety Checks</div>`;
+      const safetyChecks = [
+        { key: 'jailbreakResistance', label: 'Jailbreak resistance' },
+        { key: 'piiHandling', label: 'PII handling' },
+        { key: 'boundaryRespect', label: 'Boundary respect' },
+      ];
+      safetyChecks.forEach(({ key, label }) => {
+        const check = report.safety[key];
+        if (!check) return;
+        const badgeClass = check.result === 'pass' ? 'pass' : check.result === 'fail' ? 'fail' : 'partial';
+        html += `<div class="safety-row">
+          <span class="safety-name">${label}</span>
+          <span class="skill-badge ${badgeClass}">${check.result.toUpperCase()}</span>
+        </div>`;
+      });
+      html += `</div>`;
+    }
+
+    // Verdict section
+    html += `<div class="report-section">
+      <div class="report-section-title">Verdict</div>
+      <div class="verdict-score">${report.verdict.overallScore}</div>
+      <div class="verdict-label">OVERALL SCORE</div>
+      <div class="verdict-summary">${report.verdict.summary}</div>
+    </div>`;
+
+    // Inspection metadata
+    html += `<div class="report-section">
+      <div class="report-section-title">Inspection Details</div>
+      <div class="cert-row"><span class="cert-label">METHOD</span><span class="cert-value" style="max-width:70%; white-space:normal; text-align:right; font-size:11px;">${report.inspection.method}</span></div>
+      <div class="cert-row"><span class="cert-label">DURATION</span><span class="cert-value">${report.inspection.duration}</span></div>
+      <div class="cert-row"><span class="cert-label">ENVIRONMENT</span><span class="cert-value">${report.inspection.environment}</span></div>
+    </div>`;
+
+    return html;
+  }
+
   // ── Footer ──────────────────────────────────────────────────────────
   const shortAddr = CONTRACT_ADDRESS.slice(0, 6) + "..." + CONTRACT_ADDRESS.slice(-4);
   document.getElementById("contractAddr").textContent = shortAddr;
@@ -395,13 +701,22 @@
 
   // ── Verify ──────────────────────────────────────────────────────────
   window.verifyAgent = async function() {
-    const input = document.getElementById("agentAddress");
+    const inputEl = document.getElementById("agentInput");
     const resultDiv = document.getElementById("result");
     const btn = document.getElementById("verifyBtn");
-    const address = input.value.trim();
+    const rawInput = inputEl.value.trim();
 
-    if (!ethers.isAddress(address)) {
-      resultDiv.innerHTML = `<div class="error-msg">Invalid address. Enter a valid Ethereum/0G address.</div>`;
+    if (!rawInput) {
+      resultDiv.innerHTML = `<div class="error-msg">Enter an agent identifier: wallet address, GitHub repo, API URL, or name.</div>`;
+      resultDiv.classList.add("show");
+      return;
+    }
+
+    let resolved;
+    try {
+      resolved = resolveAgentId(rawInput);
+    } catch {
+      resultDiv.innerHTML = `<div class="error-msg">Could not resolve identifier. Check the format and try again.</div>`;
       resultDiv.classList.add("show");
       return;
     }
@@ -410,6 +725,8 @@
     btn.textContent = "CHECKING...";
     resultDiv.innerHTML = `<div class="loading">QUERYING 0G CHAIN</div>`;
     resultDiv.classList.add("show");
+
+    const address = resolved.address;
 
     try {
       const [certified, activeCertCount] = await contract.verify(address);
@@ -420,6 +737,7 @@
             <span class="dot"></span>
             NOT CERTIFIED
           </div>
+          ${resolved.type !== "address" ? `<div style="font-family: var(--mono); font-size: 10px; color: var(--slate); margin-bottom: 12px; letter-spacing: 1px;">${ID_TYPE_LABELS[resolved.type]}: ${resolved.canonical}<br>ON-CHAIN: ${resolved.address}</div>` : ""}
           <p class="no-cert-msg">
             No active certifications found for this agent.
             The agent has no certifications, or all certifications have expired.
@@ -437,7 +755,15 @@
         </div>
       `;
 
-      for (const cert of certs) {
+      if (resolved.type !== "address") {
+        html += `<div style="font-family: var(--mono); font-size: 10px; color: var(--slate); margin-bottom: 16px; letter-spacing: 1px; line-height: 1.8;">
+          ${ID_TYPE_LABELS[resolved.type]}: ${resolved.canonical}<br>
+          ON-CHAIN: ${resolved.address}
+        </div>`;
+      }
+
+      for (let ci = 0; ci < certs.length; ci++) {
+        const cert = certs[ci];
         const issuedDate = new Date(Number(cert.issuedAt) * 1000);
         const expiresDate = new Date(Number(cert.expiresAt) * 1000);
         const now = Date.now() / 1000;
@@ -448,12 +774,30 @@
         const shortReport = cert.reportHash.slice(0, 10) + "..." + cert.reportHash.slice(-8);
         const soonClass = daysLeft <= 7 ? " soon" : "";
 
+        // Try to load the full report
+        const report = await loadReport(cert.reportHash);
+        const agentName = report ? report.agent.name : null;
+        const agentDesc = report ? report.agent.description : null;
+
         html += `
           <div class="cert-card">
             <div class="cert-header">
               <span class="cert-type-badge ${certClass}">${certType}</span>
               <span class="cert-id">#${cert.id.toString()}</span>
-            </div>
+            </div>`;
+
+        if (agentName) {
+          const agentIdType = report.agent.identifierType;
+          const agentIdentifier = report.agent.identifier;
+          html += `
+            <div style="margin-bottom: 16px;">
+              <div style="font-family: var(--display); font-size: 16px; font-weight: 500; color: var(--starlight); margin-bottom: 4px;">${agentName}</div>
+              <div style="font-size: 12px; color: var(--silver); line-height: 1.5;">${agentDesc}</div>
+              ${agentIdType && agentIdType !== "address" ? `<div style="font-family: var(--mono); font-size: 10px; color: var(--slate); margin-top: 6px; letter-spacing: 1px;">${(ID_TYPE_LABELS[agentIdType] || agentIdType.toUpperCase())}: ${agentIdentifier}</div>` : ""}
+            </div>`;
+        }
+
+        html += `
             <div class="cert-row">
               <span class="cert-label">CERTIFIER</span>
               <span class="cert-value"><a href="${EXPLORER}/address/${cert.certifier}" target="_blank">${shortCertifier}</a></span>
@@ -472,9 +816,18 @@
             </div>
             <div class="expiry-countdown${soonClass}">
               ${daysLeft > 7 ? daysLeft + " days remaining" : daysLeft + " days remaining, renewal needed soon"}
-            </div>
-          </div>
-        `;
+            </div>`;
+
+        if (report) {
+          const reportId = `report-${ci}`;
+          html += `
+            <button class="report-toggle" onclick="document.getElementById('${reportId}').classList.toggle('open'); this.textContent = this.textContent === 'VIEW FULL REPORT' ? 'HIDE REPORT' : 'VIEW FULL REPORT';">VIEW FULL REPORT</button>
+            <div class="report-detail" id="${reportId}">
+              ${renderReport(report)}
+            </div>`;
+        }
+
+        html += `</div>`;
       }
 
       resultDiv.innerHTML = html;
@@ -487,7 +840,7 @@
     }
   };
 
-  document.getElementById("agentAddress").addEventListener("keydown", (e) => {
+  document.getElementById("agentInput").addEventListener("keydown", (e) => {
     if (e.key === "Enter") window.verifyAgent();
   });
 </script>

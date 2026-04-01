@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Dantian Agent Certification Report",
+  "description": "Structured evidence of what was checked during agent certification",
+  "type": "object",
+  "required": ["version", "agent", "certifier", "inspection", "skills", "verdict"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "agent": {
+      "type": "object",
+      "required": ["address", "name", "description", "claimedSkills"],
+      "properties": {
+        "address": { "type": "string", "description": "Deterministic on-chain address (derived from identifier for non-wallet agents)" },
+        "identifier": { "type": "string", "description": "Canonical agent identifier (e.g., github:owner/repo, api:https://..., or 0x address)" },
+        "identifierType": { "type": "string", "enum": ["address", "github", "api", "id"], "description": "Type of agent identifier" },
+        "name": { "type": "string", "description": "Agent display name" },
+        "description": { "type": "string", "description": "What the agent claims to do" },
+        "operator": { "type": "string", "description": "Who runs this agent" },
+        "model": { "type": "string", "description": "Underlying model if known" },
+        "endpoint": { "type": "string", "description": "API endpoint if publicly accessible" },
+        "claimedSkills": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Skills the agent claims to have"
+        }
+      }
+    },
+    "certifier": {
+      "type": "object",
+      "required": ["address", "name"],
+      "properties": {
+        "address": { "type": "string" },
+        "name": { "type": "string" },
+        "organization": { "type": "string" }
+      }
+    },
+    "inspection": {
+      "type": "object",
+      "required": ["date", "method", "duration"],
+      "properties": {
+        "date": { "type": "string", "format": "date-time" },
+        "method": { "type": "string", "description": "How the inspection was conducted" },
+        "duration": { "type": "string", "description": "How long the inspection took" },
+        "environment": { "type": "string", "description": "Where the tests ran" }
+      }
+    },
+    "skills": {
+      "type": "array",
+      "description": "Each claimed skill, tested individually with evidence",
+      "items": {
+        "type": "object",
+        "required": ["skill", "claimed", "tested", "result", "evidence"],
+        "properties": {
+          "skill": { "type": "string", "description": "Name of the skill" },
+          "claimed": { "type": "boolean", "description": "Did the agent claim this skill" },
+          "tested": { "type": "boolean", "description": "Was this skill actually tested" },
+          "result": {
+            "type": "string",
+            "enum": ["pass", "fail", "partial", "not_tested"],
+            "description": "Test outcome"
+          },
+          "score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Numeric score if applicable"
+          },
+          "test": {
+            "type": "object",
+            "description": "The actual test that was run",
+            "properties": {
+              "prompt": { "type": "string", "description": "Input given to the agent" },
+              "expectedBehavior": { "type": "string", "description": "What a passing response looks like" },
+              "actualResponse": { "type": "string", "description": "What the agent actually returned" },
+              "responseTime": { "type": "string", "description": "How long the agent took to respond" }
+            }
+          },
+          "evidence": {
+            "type": "string",
+            "description": "Human-readable summary of why this skill passed or failed"
+          }
+        }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "description": "Safety checks run on the agent",
+      "properties": {
+        "jailbreakResistance": {
+          "type": "object",
+          "properties": {
+            "tested": { "type": "boolean" },
+            "result": { "type": "string", "enum": ["pass", "fail", "partial"] },
+            "attempts": { "type": "number" },
+            "breaches": { "type": "number" },
+            "evidence": { "type": "string" }
+          }
+        },
+        "piiHandling": {
+          "type": "object",
+          "properties": {
+            "tested": { "type": "boolean" },
+            "result": { "type": "string", "enum": ["pass", "fail", "partial"] },
+            "evidence": { "type": "string" }
+          }
+        },
+        "boundaryRespect": {
+          "type": "object",
+          "properties": {
+            "tested": { "type": "boolean" },
+            "result": { "type": "string", "enum": ["pass", "fail", "partial"] },
+            "evidence": { "type": "string" }
+          }
+        }
+      }
+    },
+    "verdict": {
+      "type": "object",
+      "required": ["certified", "certType", "overallScore", "summary", "expiresAt"],
+      "properties": {
+        "certified": { "type": "boolean" },
+        "certType": { "type": "string", "enum": ["IDENTITY", "CAPABILITY", "SAFETY", "COMPLIANCE"] },
+        "overallScore": { "type": "number", "minimum": 0, "maximum": 100 },
+        "skillsVerified": { "type": "number", "description": "How many claimed skills passed" },
+        "skillsClaimed": { "type": "number", "description": "How many skills were claimed" },
+        "summary": { "type": "string", "description": "One-paragraph verdict" },
+        "expiresAt": { "type": "string", "format": "date-time" },
+        "recommendedRecheckDate": { "type": "string", "format": "date-time" }
+      }
+    }
+  }
+}
