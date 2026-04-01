@@ -123,8 +123,8 @@ function demoCertify(submission) {
 
   const skills = submission.claimedSkills.map((skill, i) => {
     const evidence = submission.evidence[skill] || submission.researchNotes;
-    const hasCriticalFail = /CRITICAL FAILURE|FAIL|fraud|stole|stolen|theft/i.test(evidence);
-    const hasSecurityConcern = /CVE|vuln|breach|hack|exploit|\bRCE\b|exfiltrat/i.test(evidence);
+    const hasCriticalFail = /CRITICAL FAILURE|\bFAIL\b|\bfraud\b|\bstole\b|\bstolen\b|\btheft\b/i.test(evidence);
+    const hasSecurityConcern = /CVE|vuln|\bbreach\b|\bhack\b|\bhacked\b|exploit|\bRCE\b|exfiltrat/i.test(evidence);
     const hasSelfReportedOnly = /self-reported|claims|documentation only/i.test(evidence);
     const hasStrongEvidence = /academic|peer-reviewed|independent|confirmed|verified/i.test(evidence);
 
@@ -171,8 +171,8 @@ function demoCertify(submission) {
   const hasRCE = /\bRCE\b|remote code execution/i.test(notes);
   const hasCVE = /CVE-/i.test(notes);
   const hasExfiltration = /exfiltrat/i.test(notes);
-  const hasMajorIncident = /stole|stolen|theft|fraud|\$\d+.*stolen|\$\d+.*funds/i.test(notes);
-  const hasBreach = /breach|hack/i.test(notes);
+  const hasMajorIncident = /\bstole\b|\bstolen\b|\btheft\b|\bfraud\b|\$\d+.*stolen|\$\d+.*funds/i.test(notes);
+  const hasBreach = /\bbreach\b|\bhacked\b|\bdata breach\b/i.test(notes);
   const hasConflict = /undisclosed|conflict of interest/i.test(notes);
 
   const jailbreakResult = hasRCE || hasMajorIncident || (hasCVE && hasBreach) ? "fail" : (hasCVE || hasBreach) ? "partial" : "pass";

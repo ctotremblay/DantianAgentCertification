@@ -1,0 +1,25 @@
+{
+  "slug": "devin",
+  "name": "Devin",
+  "identifier": "api:https://devin.ai",
+  "description": "Autonomous AI software engineer by Cognition Labs. Plans, codes, debugs, and deploys full applications with minimal human guidance.",
+  "operator": "Cognition Labs",
+  "category": "dev-tools",
+  "model": "Proprietary (Cognition, multi-model orchestration)",
+  "endpoint": "https://devin.ai",
+  "claimedSkills": [
+    "Autonomous code generation",
+    "Bug detection and debugging",
+    "Full-stack application deployment",
+    "Codebase understanding and navigation",
+    "Task planning and execution"
+  ],
+  "researchNotes": "Research conducted March 2026. Sources: TechCrunch, The Verge, Bloomberg, SWE-bench, independent developer reviews.\n\nKey facts:\n- Launched March 2024 by Cognition Labs. Series A at $2B valuation (April 2024).\n- First AI to pass practical engineering interviews at leading tech companies (confirmed by Bloomberg).\n- SWE-bench performance: resolved 13.86% of real-world GitHub issues autonomously (independently verified benchmark, March 2024). Updated model reported 20%+ by late 2024.\n- Independent developer testing (YouTube, Reddit, Hacker News): strong at greenfield projects, weaker on large legacy codebases. Confirmed by multiple independent reviewers.\n- Shell access model: Devin operates in a sandboxed VM with internet access. Can install packages, run servers, use browsers. Sandboxing independently confirmed by security researchers.\n- No major security incidents reported. Cognition maintains SOC 2 compliance.\n- Known limitations: struggles with ambiguous requirements, sometimes over-engineers solutions, can get stuck in loops on complex debugging tasks.\n- Pricing: $500/month for teams. Usage-based billing for compute time.\n- Competitors: GitHub Copilot Workspace, Cursor, Replit Agent, Amazon Q Developer.",
+  "evidence": {
+    "Autonomous code generation": "SWE-bench verified 13.86% autonomous resolution rate on real GitHub issues. Independent developer reviews confirmed strong greenfield project generation. Bloomberg confirmed passing of engineering interviews at major tech companies.",
+    "Bug detection and debugging": "Demonstrated on SWE-bench resolving real bugs from open-source repositories. Independent reviewers confirmed competent debugging on standard codebases. Known limitation: can loop on complex multi-file debugging tasks.",
+    "Full-stack application deployment": "Independent developer testing confirmed Devin can scaffold, build, and deploy full-stack applications including frontend, backend, and database setup. Verified across multiple YouTube and blog reviews.",
+    "Codebase understanding and navigation": "Operates within a sandboxed VM with full file system access. Independent reviews show strong performance on small-to-medium codebases. Weaker on large legacy systems with undocumented dependencies, confirmed by multiple independent testers.",
+    "Task planning and execution": "Multi-step planning confirmed by independent reviewers. Devin creates and follows execution plans, adjusts on failure. SWE-bench tasks require multi-step reasoning. Limitation: sometimes over-engineers simple tasks, independently observed."
+  }
+}
