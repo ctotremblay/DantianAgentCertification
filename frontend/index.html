@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dantian Agent Certification</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Dantian Brand: Void + Starlight */
+      --void: #000000;
+      --abyss: #0A0A0A;
+      --obsidian: #141414;
+      --carbon: #1A1A1A;
+      --graphite: #222222;
+      --starlight: #F0EAFF;
+      --moonstone: #D8D2E8;
+      --silver: #8A8498;
+      --slate: #5A5466;
+      --dusk: #3A3444;
+      /* Signal colors: functional state only */
+      --signal-green: #10B981;
+      --signal-red: #EF4444;
+      --signal-amber: #F59E0B;
+      /* Typography */
+      --display: 'Space Grotesk', sans-serif;
+      --body: 'Inter', sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--void);
+      color: var(--starlight);
+      font-family: var(--body);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      width: 100%;
+      padding: 24px 32px;
+      border-bottom: 1px solid var(--graphite);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-family: var(--display);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--starlight);
+      letter-spacing: 4px;
+    }
+
+    .logo span {
+      font-weight: 400;
+      color: var(--silver);
+      letter-spacing: 1px;
+    }
+
+    .network-badge {
+      font-family: var(--mono);
+      font-size: 10px;
+      padding: 4px 10px;
+      border: 1px solid var(--graphite);
+      color: var(--silver);
+      letter-spacing: 2px;
+    }
+
+    main {
+      width: 100%;
+      max-width: 600px;
+      padding: 64px 24px;
+      flex: 1;
+    }
+
+    h1 {
+      font-family: var(--display);
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--starlight);
+      letter-spacing: 2px;
+    }
+
+    .subtitle {
+      color: var(--silver);
+      font-size: 14px;
+      margin-bottom: 48px;
+      line-height: 1.7;
+    }
+
+    .search-box {
+      position: relative;
+      margin-bottom: 24px;
+    }
+
+    .search-box input {
+      width: 100%;
+      background: var(--abyss);
+      border: 1px solid var(--graphite);
+      padding: 16px;
+      font-family: var(--mono);
+      font-size: 14px;
+      color: var(--starlight);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-box input:focus {
+      border-color: var(--starlight);
+    }
+
+    .search-box input::placeholder {
+      color: var(--slate);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--starlight);
+      color: var(--void);
+      border: none;
+      font-family: var(--display);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    .btn:hover { opacity: 0.85; }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* Results */
+    .result {
+      margin-top: 40px;
+      display: none;
+    }
+
+    .result.show { display: block; }
+
+    .status-bar {
+      padding: 16px 20px;
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 2px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-bar.certified {
+      background: rgba(16, 185, 129, 0.06);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      color: var(--signal-green);
+    }
+
+    .status-bar.not-certified {
+      background: rgba(239, 68, 68, 0.06);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      color: var(--signal-red);
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .certified .dot { background: var(--signal-green); box-shadow: 0 0 6px var(--signal-green); }
+    .not-certified .dot { background: var(--signal-red); }
+
+    .cert-card {
+      background: var(--abyss);
+      border: 1px solid var(--graphite);
+      padding: 24px;
+      margin-bottom: 12px;
+    }
+
+    .cert-card .cert-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .cert-type-badge {
+      font-family: var(--mono);
+      font-size: 10px;
+      padding: 3px 10px;
+      font-weight: 400;
+      letter-spacing: 2px;
+      border: 1px solid var(--graphite);
+      color: var(--moonstone);
+    }
+
+    .cert-type-badge.identity { border-color: rgba(240, 234, 255, 0.2); }
+    .cert-type-badge.capability { border-color: rgba(16, 185, 129, 0.3); color: var(--signal-green); }
+    .cert-type-badge.safety { border-color: rgba(96, 165, 250, 0.3); color: #60a5fa; }
+    .cert-type-badge.compliance { border-color: rgba(245, 158, 11, 0.3); color: var(--signal-amber); }
+
+    .cert-id {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--slate);
+    }
+
+    .cert-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(240, 234, 255, 0.04);
+      font-size: 13px;
+    }
+
+    .cert-row:last-child { border-bottom: none; }
+
+    .cert-label {
+      font-family: var(--mono);
+      color: var(--slate);
+      font-size: 10px;
+      letter-spacing: 2px;
+    }
+
+    .cert-value {
+      font-family: var(--mono);
+      color: var(--moonstone);
+      font-size: 12px;
+      text-align: right;
+      max-width: 60%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cert-value a {
+      color: var(--starlight);
+      text-decoration: none;
+    }
+    .cert-value a:hover { text-decoration: underline; }
+
+    .expiry-countdown {
+      font-family: var(--mono);
+      font-size: 10px;
+      margin-top: 16px;
+      padding: 10px 12px;
+      border: 1px solid rgba(240, 234, 255, 0.06);
+      color: var(--silver);
+      text-align: center;
+      letter-spacing: 1px;
+    }
+
+    .expiry-countdown.soon {
+      border-color: rgba(245, 158, 11, 0.3);
+      color: var(--signal-amber);
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: var(--slate);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 2px;
+    }
+
+    .error-msg {
+      padding: 16px;
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      color: var(--signal-red);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .no-cert-msg {
+      color: var(--silver);
+      font-size: 13px;
+      padding: 8px 0;
+      line-height: 1.7;
+    }
+
+    footer {
+      width: 100%;
+      padding: 24px;
+      border-top: 1px solid rgba(240, 234, 255, 0.04);
+      text-align: center;
+      font-size: 10px;
+      color: var(--slate);
+      letter-spacing: 1px;
+    }
+
+    footer a {
+      color: var(--silver);
+      text-decoration: none;
+    }
+    footer a:hover { color: var(--starlight); }
+
+    .footer-brand {
+      font-family: var(--display);
+      font-weight: 700;
+      letter-spacing: 4px;
+      color: var(--silver);
+      margin-bottom: 6px;
+      font-size: 10px;
+    }
+
+    .footer-links {
+      font-family: var(--mono);
+    }
+
+    @media (max-width: 480px) {
+      h1 { font-size: 24px; }
+      main { padding: 40px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">DANTIAN <span>Agent Certification</span></div>
+  <div class="network-badge">0G TESTNET</div>
+</header>
+
+<main>
+  <h1>Verify an Agent</h1>
+  <p class="subtitle">
+    Paste any agent address to check its certification status on 0G Chain.
+    Certifications are time-bound. Expired means re-verification is needed.
+  </p>
+
+  <div class="search-box">
+    <input
+      type="text"
+      id="agentAddress"
+      placeholder="0x..."
+      spellcheck="false"
+      autocomplete="off"
+    >
+  </div>
+
+  <button class="btn" id="verifyBtn" onclick="verifyAgent()">
+    VERIFY AGENT
+  </button>
+
+  <div class="result" id="result"></div>
+</main>
+
+<footer>
+  <div class="footer-brand">DANTIAN</div>
+  <div class="footer-links">
+    Built on <a href="https://0g.ai" target="_blank">0G</a> |
+    <a href="https://chainscan-galileo.0g.ai" target="_blank">Explorer</a> |
+    Contract: <a id="contractLink" href="#" target="_blank"><span id="contractAddr">loading...</span></a>
+  </div>
+</footer>
+
+<script type="module">
+  // ── Config ──────────────────────────────────────────────────────────
+  // UPDATE THIS after deploying
+  const CONTRACT_ADDRESS = "0x5C1dc7Daf8774C963c28c7487365fc7e4AeA4065";
+  const RPC_URL = "https://evmrpc-testnet.0g.ai";
+  const EXPLORER = "https://chainscan-galileo.0g.ai";
+
+  const ABI = [
+    "function verify(address _agent) view returns (bool certified, uint256 activeCertCount)",
+    "function verifyByType(address _agent, uint8 _certType) view returns (bool certified, uint256 latestCertId, uint256 expiresAt)",
+    "function getActiveCertifications(address _agent) view returns (tuple(uint256 id, address agent, address certifier, uint8 certType, uint256 issuedAt, uint256 expiresAt, bytes32 reportHash, string uri, bool revoked)[])",
+    "function getCertification(uint256 _certId) view returns (tuple(uint256 id, address agent, address certifier, uint8 certType, uint256 issuedAt, uint256 expiresAt, bytes32 reportHash, string uri, bool revoked))",
+    "function totalCertifications() view returns (uint256)",
+  ];
+
+  const CERT_TYPES = ["IDENTITY", "CAPABILITY", "SAFETY", "COMPLIANCE"];
+  const CERT_CLASSES = ["identity", "capability", "safety", "compliance"];
+
+  // ── Footer ──────────────────────────────────────────────────────────
+  const shortAddr = CONTRACT_ADDRESS.slice(0, 6) + "..." + CONTRACT_ADDRESS.slice(-4);
+  document.getElementById("contractAddr").textContent = shortAddr;
+  document.getElementById("contractLink").href = `${EXPLORER}/address/${CONTRACT_ADDRESS}`;
+
+  // ── Ethers (CDN) ────────────────────────────────────────────────────
+  const { ethers } = await import("https://cdn.jsdelivr.net/npm/ethers@6.13.1/+esm");
+
+  const provider = new ethers.JsonRpcProvider(RPC_URL);
+  const contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
+
+  // ── Verify ──────────────────────────────────────────────────────────
+  window.verifyAgent = async function() {
+    const input = document.getElementById("agentAddress");
+    const resultDiv = document.getElementById("result");
+    const btn = document.getElementById("verifyBtn");
+    const address = input.value.trim();
+
+    if (!ethers.isAddress(address)) {
+      resultDiv.innerHTML = `<div class="error-msg">Invalid address. Enter a valid Ethereum/0G address.</div>`;
+      resultDiv.classList.add("show");
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = "CHECKING...";
+    resultDiv.innerHTML = `<div class="loading">QUERYING 0G CHAIN</div>`;
+    resultDiv.classList.add("show");
+
+    try {
+      const [certified, activeCertCount] = await contract.verify(address);
+
+      if (!certified) {
+        resultDiv.innerHTML = `
+          <div class="status-bar not-certified">
+            <span class="dot"></span>
+            NOT CERTIFIED
+          </div>
+          <p class="no-cert-msg">
+            No active certifications found for this agent.
+            The agent has no certifications, or all certifications have expired.
+          </p>
+        `;
+        return;
+      }
+
+      const certs = await contract.getActiveCertifications(address);
+
+      let html = `
+        <div class="status-bar certified">
+          <span class="dot"></span>
+          CERTIFIED (${activeCertCount.toString()} active)
+        </div>
+      `;
+
+      for (const cert of certs) {
+        const issuedDate = new Date(Number(cert.issuedAt) * 1000);
+        const expiresDate = new Date(Number(cert.expiresAt) * 1000);
+        const now = Date.now() / 1000;
+        const daysLeft = Math.ceil((Number(cert.expiresAt) - now) / 86400);
+        const certType = CERT_TYPES[Number(cert.certType)];
+        const certClass = CERT_CLASSES[Number(cert.certType)];
+        const shortCertifier = cert.certifier.slice(0, 6) + "..." + cert.certifier.slice(-4);
+        const shortReport = cert.reportHash.slice(0, 10) + "..." + cert.reportHash.slice(-8);
+        const soonClass = daysLeft <= 7 ? " soon" : "";
+
+        html += `
+          <div class="cert-card">
+            <div class="cert-header">
+              <span class="cert-type-badge ${certClass}">${certType}</span>
+              <span class="cert-id">#${cert.id.toString()}</span>
+            </div>
+            <div class="cert-row">
+              <span class="cert-label">CERTIFIER</span>
+              <span class="cert-value"><a href="${EXPLORER}/address/${cert.certifier}" target="_blank">${shortCertifier}</a></span>
+            </div>
+            <div class="cert-row">
+              <span class="cert-label">ISSUED</span>
+              <span class="cert-value">${issuedDate.toLocaleDateString()} ${issuedDate.toLocaleTimeString()}</span>
+            </div>
+            <div class="cert-row">
+              <span class="cert-label">EXPIRES</span>
+              <span class="cert-value">${expiresDate.toLocaleDateString()} ${expiresDate.toLocaleTimeString()}</span>
+            </div>
+            <div class="cert-row">
+              <span class="cert-label">REPORT</span>
+              <span class="cert-value">${shortReport}</span>
+            </div>
+            <div class="expiry-countdown${soonClass}">
+              ${daysLeft > 7 ? daysLeft + " days remaining" : daysLeft + " days remaining, renewal needed soon"}
+            </div>
+          </div>
+        `;
+      }
+
+      resultDiv.innerHTML = html;
+    } catch (err) {
+      console.error(err);
+      resultDiv.innerHTML = `<div class="error-msg">Error querying contract: ${err.message}</div>`;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "VERIFY AGENT";
+    }
+  };
+
+  document.getElementById("agentAddress").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") window.verifyAgent();
+  });
+</script>
+
+</body>
+</html>
