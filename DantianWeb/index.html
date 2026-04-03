@@ -443,37 +443,77 @@
     border: 0;
   }
 
+  /* HAMBURGER (mobile) */
+  .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 8px; z-index: 102; }
+  .hamburger span { display: block; width: 20px; height: 1.5px; background: var(--starlight); margin: 4px 0; transition: 0.3s; }
+
+  /* Mobile close button inside menu */
+  .mobile-close {
+    display: none;
+    position: absolute;
+    top: 20px; right: 20px;
+    background: none;
+    border: none;
+    color: var(--starlight);
+    font-size: 28px;
+    cursor: pointer;
+    padding: 8px;
+    line-height: 1;
+    z-index: 103;
+  }
+
+  /* H1 break: visible on desktop, hidden on mobile */
+  .hero h1 .br-desktop { display: inline; }
+
   /* RESPONSIVE */
   @media (max-width: 640px) {
     nav { padding: 16px 20px; }
     .nav-links { gap: 20px; }
     .nav-links a { font-size: 11px; letter-spacing: 1px; }
-    .hero { padding: 100px 20px 60px; }
-    #blobCanvas { width: 280px; height: 280px; }
+    .hero { padding: 90px 20px 40px; }
+    .hero h1 .br-desktop { display: none; }
+    .hero h1 { letter-spacing: 1px; }
+    .hero-tagline { margin-top: 20px; }
+    .hero p { font-size: 14px; }
+    #blobCanvas { width: 240px; height: 240px; }
     section { padding: 60px 20px; }
+    footer { padding: 40px 20px; }
     .email-form { flex-direction: column; }
     .email-form button { padding: 14px; }
     .socials { flex-wrap: wrap; gap: 16px; }
-  }
+    .nav-wordmark { font-size: 16px; letter-spacing: 4px; }
 
-  /* HAMBURGER (mobile) */
-  .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 4px; }
-  .hamburger span { display: block; width: 20px; height: 1.5px; background: var(--starlight); margin: 4px 0; transition: 0.3s; }
-
-  @media (max-width: 640px) {
     .hamburger { display: block; }
+    .mobile-close { display: block; }
     .nav-links {
       position: fixed;
       top: 0; right: -100%;
       width: 100%; height: 100vh;
+      height: 100dvh;
       flex-direction: column;
       justify-content: center;
       background: var(--void);
       transition: right 0.4s;
       gap: 40px;
+      z-index: 101;
     }
     .nav-links.open { right: 0; }
     .nav-links a { font-size: 16px; letter-spacing: 4px; }
+
+    .unsub-form .email-form { flex-direction: column; }
+  }
+
+  /* Very small phones */
+  @media (max-width: 380px) {
+    #blobCanvas { width: 200px; height: 200px; }
+    .hero h1 { font-size: 22px; }
+    .nav-wordmark { font-size: 14px; letter-spacing: 3px; }
+  }
+
+  /* Safe area for notched phones */
+  @supports (padding: env(safe-area-inset-bottom)) {
+    footer { padding-bottom: calc(40px + env(safe-area-inset-bottom)); }
+    nav { padding-top: max(16px, env(safe-area-inset-top)); }
   }
 </style>
 </head>
@@ -498,6 +538,7 @@
     <span></span><span></span><span></span>
   </button>
   <ul class="nav-links">
+    <button class="mobile-close" aria-label="Close menu" onclick="this.parentElement.classList.remove('open')">&times;</button>
     <li><a href="#research">Research</a></li>
     <li><a href="#connect">Connect</a></li>
   </ul>
@@ -507,7 +548,7 @@
 <div class="hero">
   <canvas id="blobCanvas" width="720" height="720" aria-label="Interactive blob animation"></canvas>
   <p class="hero-tagline">AI Research</p>
-  <h1>Engineering the future of<br>human and synthetic integration.</h1>
+  <h1>Engineering the future of<span class="br-desktop"><br></span> human and synthetic integration.</h1>
   <p>Building AI aligned with people, not platforms.<br>Self-sovereign by architecture.</p>
 
   <form class="email-form" id="emailForm" action="https://formspree.io/f/xlgopbrr" method="POST">
@@ -565,28 +606,40 @@
   const ctx = canvas.getContext('2d');
 
   const chars = '01{}[]()<>:;=+/\\|~!@#$%^&*丹田気力道心'.split('');
-  const fontSize = 13;
+  const isMobile = window.innerWidth <= 640;
+  const fontSize = isMobile ? 16 : 13;
   let columns, drops;
+  let frameCount = 0;
 
   function resize() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     columns = Math.floor(canvas.width / fontSize);
+    // On mobile, use half the columns for performance
+    if (isMobile) columns = Math.floor(columns / 2);
     drops = Array(columns).fill(1);
   }
   resize();
   window.addEventListener('resize', resize);
 
   function draw() {
+    frameCount++;
+    // On mobile, skip every other frame to save battery
+    if (isMobile && frameCount % 2 !== 0) {
+      requestAnimationFrame(draw);
+      return;
+    }
+
     ctx.fillStyle = 'rgba(0, 0, 0, 0.06)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     ctx.fillStyle = 'rgba(240, 234, 255, 0.12)';
     ctx.font = fontSize + 'px JetBrains Mono, monospace';
 
+    const step = isMobile ? 2 : 1;
     for (let i = 0; i < drops.length; i++) {
       const char = chars[Math.floor(Math.random() * chars.length)];
-      ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+      ctx.fillText(char, i * fontSize * (isMobile ? 2 : 1), drops[i] * fontSize);
 
       if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
         drops[i] = 0;
