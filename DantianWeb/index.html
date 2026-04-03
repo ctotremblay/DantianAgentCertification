@@ -270,6 +270,58 @@
     display: none;
   }
 
+  .form-error {
+    color: #ff6b6b;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    margin-top: 40px;
+    display: none;
+  }
+
+  .email-form button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* UNSUBSCRIBE */
+  .unsub-link {
+    color: rgba(240, 234, 255, 0.15);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-decoration: none;
+    transition: color 0.3s;
+    margin-top: 16px;
+    display: inline-block;
+  }
+
+  .unsub-link:hover { color: var(--starlight-dim); }
+
+  .unsub-form {
+    margin-top: 24px;
+    display: none;
+    max-width: 420px;
+    width: 100%;
+  }
+
+  .unsub-form .email-form {
+    margin-top: 8px;
+  }
+
+  .unsub-note {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--starlight-dim);
+    margin-bottom: 8px;
+  }
+
+  .unsub-success {
+    color: var(--starlight);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    display: none;
+  }
+
   /* SECTIONS */
   section {
     position: relative;
@@ -458,13 +510,15 @@
   <h1>Engineering the future of<br>human and synthetic integration.</h1>
   <p>Building AI aligned with people, not platforms.<br>Self-sovereign by architecture.</p>
 
-  <form class="email-form" id="emailForm">
+  <form class="email-form" id="emailForm" action="https://formspree.io/f/xlgopbrr" method="POST">
     <label for="emailInput" class="sr-only">Email address</label>
     <input id="emailInput" name="email" type="email" placeholder="your@email.com" required>
-    <button type="submit">JOIN</button>
+    <input type="hidden" name="_subject" value="New Dantian subscriber">
+    <button type="submit" id="emailBtn">JOIN</button>
   </form>
   <p class="form-note">No spam. Research and product launch only.</p>
   <p class="form-success" id="formSuccess">Received. You are in.</p>
+  <p class="form-error" id="formError">Something went wrong. Try again.</p>
 </div>
 
 <!-- RESEARCH -->
@@ -488,6 +542,18 @@
     <a href="https://www.linkedin.com/company/dantianresearch/" target="_blank" rel="noopener">Dantian Research</a>
   </div>
   <p class="footer-line">Dantian, 2026.</p>
+  <a href="#" class="unsub-link" id="unsubToggle">Unsubscribe</a>
+  <div class="unsub-form" id="unsubForm">
+    <p class="unsub-note">Enter your email to remove your data.</p>
+    <form class="email-form" id="unsubEmailForm" action="https://formspree.io/f/xlgopbrr" method="POST">
+      <label for="unsubInput" class="sr-only">Email to unsubscribe</label>
+      <input id="unsubInput" name="email" type="email" placeholder="your@email.com" required>
+      <input type="hidden" name="_subject" value="Dantian unsubscribe request">
+      <input type="hidden" name="action" value="unsubscribe">
+      <button type="submit">REMOVE</button>
+    </form>
+    <p class="unsub-success" id="unsubSuccess">Removed. Your data has been deleted.</p>
+  </div>
 </footer>
 
 <script>
@@ -1240,14 +1306,69 @@
 })();
 
 // =========================================
-// EMAIL FORM
+// EMAIL FORM (Formspree)
 // =========================================
 document.getElementById('emailForm').addEventListener('submit', function(e) {
   e.preventDefault();
+  const form = this;
+  const btn = form.querySelector('button');
+  const original = btn.textContent;
+  btn.textContent = '...';
+  btn.disabled = true;
 
-  this.style.display = 'none';
-  document.querySelector('.form-note').style.display = 'none';
-  document.getElementById('formSuccess').style.display = 'block';
+  fetch(form.action, {
+    method: 'POST',
+    body: new FormData(form),
+    headers: { 'Accept': 'application/json' }
+  }).then(function(r) {
+    if (r.ok) {
+      form.style.display = 'none';
+      document.querySelector('.form-note').style.display = 'none';
+      document.getElementById('formSuccess').style.display = 'block';
+    } else {
+      document.getElementById('formError').style.display = 'block';
+      btn.textContent = original;
+      btn.disabled = false;
+    }
+  }).catch(function() {
+    document.getElementById('formError').style.display = 'block';
+    btn.textContent = original;
+    btn.disabled = false;
+  });
+});
+
+// =========================================
+// UNSUBSCRIBE
+// =========================================
+document.getElementById('unsubToggle').addEventListener('click', function(e) {
+  e.preventDefault();
+  var f = document.getElementById('unsubForm');
+  f.style.display = f.style.display === 'block' ? 'none' : 'block';
+});
+
+document.getElementById('unsubEmailForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  var form = this;
+  var btn = form.querySelector('button');
+  btn.textContent = '...';
+  btn.disabled = true;
+
+  fetch(form.action, {
+    method: 'POST',
+    body: new FormData(form),
+    headers: { 'Accept': 'application/json' }
+  }).then(function(r) {
+    if (r.ok) {
+      form.style.display = 'none';
+      document.getElementById('unsubSuccess').style.display = 'block';
+    } else {
+      btn.textContent = 'REMOVE';
+      btn.disabled = false;
+    }
+  }).catch(function() {
+    btn.textContent = 'REMOVE';
+    btn.disabled = false;
+  });
 });
 
 // =========================================
